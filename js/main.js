@@ -687,7 +687,7 @@
 
   try {
     //Sales chart
-    var ctx = document.getElementById("sales-chart");
+    var ctx = document.getElementById("lineChart");
     if (ctx) {
       ctx.height = 150;
       var myChart = new Chart(ctx, {
@@ -985,8 +985,8 @@
 
   try {
 
-    //line chart
-    var ctx = document.getElementById("lineChart");
+    //line chart - background
+    var ctx = document.getElementById("lineChart-background");
     if (ctx) {
       ctx.height = 150;
       var myChart = new Chart(ctx, {
