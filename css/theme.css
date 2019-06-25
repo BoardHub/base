@@ -1730,10 +1730,7 @@ section {
     width: 100%;
     top: 88px;
     z-index: 20;
-}
-
-.header-mobile .navbar-mobile .navbar-mobile__list {
-    background: #f8f8f8;
+	background : #f8f8f8
 }
 
 .header-mobile .navbar-mobile .navbar-mobile__list > li > a {
