@@ -53,17 +53,12 @@
             </div>
             <nav class="navbar-mobile">
                 <div class="container-fluid">
-                    <ul class="navbar-mobile__list list-unstyled">
-                        <li>
-                            <a class="js-arrow" href="#cricket"><i class="fas fa-tachometer-alt"></i>Cricket</a>
-                        </li>
-						<li>
-                            <a class="js-arrow" href="#bollywood"><i class="fas fa-tachometer-alt"></i>Bollywood</a>
-                        </li>
-						<li>
-                            <a class="js-arrow" href="#politics"><i class="fas fa-tachometer-alt"></i>Politics</a>
-                        </li>
-                    </ul>
+					<div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+						<a class="js-arrow nav-item nav-link" id="nav-cricket-tab" data-toggle="tab" href="#nav-cricket" role="tab" aria-controls="nav-cricket" aria-selected="false"><i class="fas fa-tachometer-alt m-r-20"></i>Cricket</a>
+						<a class="js-arrow nav-item nav-link" id="nav-bollywood-tab" data-toggle="tab" href="#nav-bollywood" role="tab" aria-controls="nav-bollywood" aria-selected="false"><i class="fas fa-tachometer-alt m-r-20"></i>Bollywood</a>
+						<a class="js-arrow nav-item nav-link" id="nav-politics-tab" data-toggle="tab" href="#nav-politics" role="tab" aria-controls="nav-politics" aria-selected="false"><i class="fas fa-tachometer-alt m-r-20"></i>Politics</a>
+						<a class="js-arrow nav-item nav-link" id="nav-misc-tab" data-toggle="tab" href="#nav-misc" role="tab" aria-controls="nav-misc" aria-selected="false"><i class="fas fa-tachometer-alt m-r-20"></i>Misc</a>
+                    </div>
                 </div>
             </nav>
         </header>
@@ -78,17 +73,12 @@
             </div>
             <div class="menu-sidebar__content js-scrollbar1">
                 <nav class="navbar-sidebar">
-                    <ul class="list-unstyled navbar__list">
-						<li>
-                            <a class="js-arrow" href="#cricket"><i class="fas fa-tachometer-alt"></i>Cricket</a>
-                        </li>
-						<li>
-                            <a class="js-arrow" href="#bollywood"><i class="fas fa-tachometer-alt"></i>Bollywood</a>
-                        </li>
-						<li>
-                            <a class="js-arrow" href="#politics"><i class="fas fa-tachometer-alt"></i>Politics</a>
-                        </li>
-                    </ul>
+					<div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+						<a class="js-arrow nav-item nav-link" id="nav-cricket-tab" data-toggle="tab" href="#nav-cricket" role="tab" aria-controls="nav-cricket" aria-selected="false"><i class="fas fa-tachometer-alt m-r-20"></i>Cricket</a>
+						<a class="js-arrow nav-item nav-link" id="nav-bollywood-tab" data-toggle="tab" href="#nav-bollywood" role="tab" aria-controls="nav-bollywood" aria-selected="false"><i class="fas fa-tachometer-alt m-r-20"></i>Bollywood</a>
+						<a class="js-arrow nav-item nav-link" id="nav-politics-tab" data-toggle="tab" href="#nav-politics" role="tab" aria-controls="nav-politics" aria-selected="false"><i class="fas fa-tachometer-alt m-r-20"></i>Politics</a>
+						<a class="js-arrow nav-item nav-link" id="nav-misc-tab" data-toggle="tab" href="#nav-misc" role="tab" aria-controls="nav-misc" aria-selected="false"><i class="fas fa-tachometer-alt m-r-20"></i>Misc</a>
+                    </div>
                 </nav>
             </div>
         </aside>
@@ -96,16 +86,13 @@
 
         <!-- PAGE CONTAINER-->
         <div class="page-container">
-            <!-- HEADER DESKTOP-->
-            <header class="header-desktop">
-            </header>
-            <!-- END HEADER DESKTOP-->
 
             <!-- MAIN CONTENT-->
             <div class="main-content">
                 <div class="section__content section__content--p30">
-                    <div class="container-fluid">
-                        <div class="row">
+					<div class="container-fluid tab-content pl-3 pt-2" id="nav-tabContent">
+						<div class="row tab-pane fade active show" id="nav-cricket" role="tabpanel" aria-labelledby="nav-cricket-tab">
+							<h2 class="col-lg-12 title-1 m-t-15 m-b-15">Cricket</h2>
                             <div class="col-lg-6">
                                 <div class="au-card m-b-30">
                                     <div class="au-card-inner">
@@ -122,6 +109,9 @@
                                     </div>
                                 </div>
                             </div>
+						</div>
+						<div class="row tab-pane fade" id="nav-bollywood" role="tabpanel" aria-labelledby="nav-bollywood-tab">
+							<h2 class="col-lg-12 title-1 m-t-15 m-b-15">Bollywood</h2>
                             <div class="col-lg-6">
                                 <div class="au-card m-b-30">
                                     <div class="au-card-inner">
@@ -138,6 +128,9 @@
                                     </div>
                                 </div>
                             </div>
+						</div>
+						<div class="row tab-pane fade" id="nav-politics" role="tabpanel" aria-labelledby="nav-politics-tab">
+							<h2 class="col-lg-12 title-1 m-t-15 m-b-15">Politics</h2>
 							<div class="col-lg-6">
                                 <div class="au-card m-b-30">
                                     <div class="au-card-inner">
@@ -154,7 +147,11 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-6">
+						</div>
+						
+						<div class="row tab-pane fade" id="nav-misc" role="tabpanel" aria-labelledby="nav-misc-tab">
+							<h2 class="col-lg-12 title-1 m-t-15 m-b-15">Misc</h2>                        
+							<div class="col-lg-6">
                                 <div class="au-card m-b-30">
                                     <div class="au-card-inner">
                                         <h3 class="title-2 m-b-40">Pie Chart</h3>
@@ -172,7 +169,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-lg-12">
                                 <div class="copyright">
                                     <p>Template by <a href="https://colorlib.com">Colorlib</a>.</p>
                                 </div>

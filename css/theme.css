@@ -254,6 +254,10 @@ section {
     padding: 0 30px;
 }
 
+.section__content>.tab-content>.tab-pane.active {
+    display: flex
+}
+
 @media (max-width: 991px) {
     .section__content--p30 {
         padding: 0;
@@ -307,13 +311,13 @@ section {
 }
 
 .main-content {
-    padding-top: 116px;
+    #padding-top: 116px;
     min-height: 100vh;
 }
 
 @media (max-width: 991px) {
     .main-content {
-        padding-top: 50px;
+        #padding-top: 50px;
     }
 }
 
