@@ -25,6 +25,42 @@ var charts = {
 			label: "My Second dataset",
             data: [16, 32, 18, 26, 42, 33, 44],
 		}]
+	},
+	singelBarChart : {
+		type : 'bar',
+		background : true,
+		xAxesLabel : '',
+		yAxesLabel : '',
+		labels : ["Sun", "Mon", "Tu", "Wed", "Th", "Fri", "Sat"],
+		datasets : [{
+			label : "My First dataset",
+			data: [40, 55, 75, 81, 56, 55, 40]
+		}]
+	},
+	doughutChart : {
+		type : 'doughnut',
+		background : true,
+		xAxesLabel : '',
+		yAxesLabel : '',
+		labels : ["A", "B", "C", "D"],
+		datasets : [{
+			label : "My First dataset",
+			data: [45, 25, 20, 10]
+		}]
+	},
+	barChart : {	
+		type : 'bar',
+		background : true,
+		xAxesLabel : '',
+		yAxesLabel : '',
+		labels : ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+		datasets : [{
+			label : "My First dataset",
+			data: [65, 59, 80, 81, 56, 55, 40]
+		},{
+			label: "My Second dataset",
+            data: [28, 48, 40, 19, 86, 27, 90],
+		}]
 	}
 }
 
@@ -44,123 +80,139 @@ var COLORS = {
 
 var COLOR_VALUES = Object.values(COLORS);
 
-function plotLineChart(id, chart) {
-	try {
-	//Line chart
-	var ctx = document.getElementById(id);
-	if (ctx) {
-	  
-	  ctx.height = 150;
-	  var datasets = [];
-	  
-	  var defaultDataset = {
-		borderWidth: 2,
-		pointStyle: 'circle',
-		pointRadius: 3,
-		pointBorderColor: 'transparent'
-	  };
-	  
-	  for(var i = 0; i < chart.datasets.length; i++) {
-		var dataset = chart.datasets[i];
-		Object.assign(dataset, defaultDataset);
-		var color = COLOR_VALUES[parseInt(Math.random()*10)];
-		dataset.borderColor = color.rgb;
-		dataset.pointBackgroundColor = color.rgb;
-		if(chart.background) {
-			dataset.backgroundColor = color.light;
-		} else {
-			dataset.backgroundColor = 'transparent';
-		}
-		datasets.push(dataset);
-	  }
-	  
-	  var myChart = new Chart(ctx, {
-		type: 'line',
-		data: {
-		  labels: chart.labels,
-		  type: 'line',
-		  defaultFontFamily: 'Poppins',
-		  datasets: datasets
-		},
-		options: {
-		  responsive: true,
-		  tooltips: {
-			mode: 'index',
-			titleFontSize: 12,
-			titleFontColor: '#000',
-			bodyFontColor: '#000',
-			backgroundColor: '#fff',
-			titleFontFamily: 'Poppins',
-			bodyFontFamily: 'Poppins',
-			cornerRadius: 3,
-			intersect: false,
-		  },
-		  legend: {
-			position: 'top',
-			display: datasets.length > 1,
-			labels: {
-			  usePointStyle: true,
-			  fontFamily: 'Poppins',
-			},
-		  },
-		  scales: {
-			xAxes: [{
-			  display: true,
-			  gridLines: {
-				display: false,
-				drawBorder: false
-			  },
-			  scaleLabel: {
-				display: true,
-				labelString: chart.xAxesLabel,
-				fontFamily: "Poppins"
-			  },
-			  ticks: {
-				fontFamily: "Poppins"
-			  }
-			}],
-			yAxes: [{
-			  display: true,
-			  gridLines: {
-				display: false,
-				drawBorder: false
-			  },
-			  scaleLabel: {
-				display: true,
-				labelString: chart.yAxesLabel,
-				fontFamily: "Poppins"
-			  },
-			  ticks: {
-				fontFamily: "Poppins"
-			  }
-			}]
-		  },
-		  title: {
-			display: false,
-			text: 'Normal Legend'
+function plotChart(id, chart) {
+
+	try {		
+		var ctx = document.getElementById(id);
+		if (ctx) {
+		  
+		  ctx.height = 200;
+		  var datasets = [];
+		  
+		  var defaultDataset = {
+			borderWidth: 2,
+			pointStyle: 'circle',
+			pointRadius: 3,
+			pointBorderColor: 'transparent'
+		  };
+		  
+		  var xAxesDisplay = true;
+		  var yAxesDisplay = true;
+		  var legendDisplay = false;
+		  if(chart.type === 'doughnut') {
+			  xAxesDisplay = false;
+			  yAxesDisplay = false;
+			  legendDisplay = true;
+		  } else {
+			  legendDisplay = datasets.length > 1
 		  }
+		  
+		  for(var i = 0; i < chart.datasets.length; i++) {
+			var dataset = chart.datasets[i];
+			Object.assign(dataset, defaultDataset);
+			if(chart.type === 'doughnut') {
+				dataset.backgroundColor = [];
+				dataset.hoverBackgroundColor = [];
+				for(var j = 0; j < dataset.data.length; j++) {
+					var backgroundColor = COLOR_VALUES[parseInt(Math.random()*10)];
+					dataset.backgroundColor.push(backgroundColor.light);
+					dataset.hoverBackgroundColor.push(backgroundColor.rgb);
+				}
+			} else {
+				var color = COLOR_VALUES[parseInt(Math.random()*10)];
+				dataset.borderColor = color.rgb;
+				dataset.pointBackgroundColor = color.rgb;
+				if(chart.background) {
+					dataset.backgroundColor = color.light;
+				} else {
+					dataset.backgroundColor = 'transparent';
+				}
+			}
+			datasets.push(dataset);
+		  }
+		  
+		  var myChart = new Chart(ctx, {
+			type: chart.type,
+			data: {
+			  labels: chart.labels,
+			  type: chart.type,
+			  defaultFontFamily: 'Poppins',
+			  datasets: datasets
+			},
+			options: {
+			  responsive: true,
+			  tooltips: {
+				mode: 'index',
+				titleFontSize: 12,
+				titleFontColor: '#000',
+				bodyFontColor: '#000',
+				backgroundColor: '#fff',
+				titleFontFamily: 'Poppins',
+				bodyFontFamily: 'Poppins',
+				cornerRadius: 3,
+				intersect: false,
+			  },
+			  legend: {
+				position: 'top',
+				display: legendDisplay,
+				labels: {
+				  usePointStyle: true,
+				  fontFamily: 'Poppins',
+				},
+			  },
+			  scales: {
+				xAxes: [{
+				  display: xAxesDisplay,
+				  gridLines: {
+					display: false,
+					drawBorder: false
+				  },
+				  scaleLabel: {
+					display: true,
+					labelString: chart.xAxesLabel,
+					fontFamily: "Poppins"
+				  },
+				  ticks: {
+					fontFamily: "Poppins"
+				  }
+				}],
+				yAxes: [{
+				  display: yAxesDisplay,
+				  gridLines: {
+					display: false,
+					drawBorder: false
+				  },
+				  scaleLabel: {
+					display: true,
+					labelString: chart.yAxesLabel,
+					fontFamily: "Poppins"
+				  },
+				  ticks: {
+					beginAtZero: true,
+					fontFamily: "Poppins"
+				  }
+				}]
+			  },
+			  title: {
+				display: false,
+				text: 'Normal Legend'
+			  }
+			}
+		  });
 		}
-	  });
-	}
-
-
 	} catch (error) {
-	console.log(error);
-	}
-}
-
-function plotChart(id) {
-	var chart = charts[id];
-	if(chart.type === 'line') {
-		plotLineChart(id, chart);
-	} else {
-		console.log('chart type not supported, id :' + chart.id + ', type : ' + chart.type );
+		console.log(error);
 	}
 }
 
 function plotCharts() {
 	for(var id in charts) {
-		plotChart(id);
+		var chart = charts[id];
+		if(chart.type === 'line' || chart.type === 'bar' || chart.type === 'doughnut') {
+			plotChart(id, chart);
+		} else {
+			console.log('chart type not supported, id :' + chart.id + ', type : ' + chart.type );
+		}
 	}
 }
 

@@ -3,6 +3,7 @@ var sections =
 	id : "cricket",
 	name : "Cricket",
 	state : 'active',
+	icon : 'fa-baseball-ball',
 	charts : [{
 		id : "lineChart",
 		name : "Line Chart"
@@ -13,19 +14,21 @@ var sections =
 },{
 	id : "politics",
 	name : "Politics",
+	icon : 'fa-flag-checkered',
 	charts : [{
 		id : "singelBarChart",
 		name : "Single Bar Chart"
 	},{
-		id : "doughutChart",
-		name : "Doughut Chart"
+		id : "barChart",
+		name : "Bar chart"
 	}]
 },{
 	id : "bollywood",
 	name : "Bollywood",
+	icon : 'fa-film',
 	charts : [{
-		id : "barChart",
-		name : "Bar chart"
+		id : "doughutChart",
+		name : "Doughut Chart"
 	},{
 		id : "radarChart",
 		name : "Rader chart"
@@ -40,7 +43,7 @@ function initLayout() {
 	for (var i = 0; i < sections.length; i++) {
 		var section = sections[i];
 
-		nav +='<a class="js-arrow nav-item nav-link '+(section.state || '')+'" id="nav-'+section.id+'-tab" data-toggle="tab" href="#nav-'+section.id+'" role="tab" aria-controls="nav-'+section.id+'" aria-selected="false"><i class="fas fa-tachometer-alt m-r-20"></i>'+section.name+'</a>';
+		nav +='<a class="js-arrow nav-item nav-link '+(section.state || '')+'" id="nav-'+section.id+'-tab" data-toggle="tab" href="#nav-'+section.id+'" role="tab" aria-controls="nav-'+section.id+'" aria-selected="false"><i class="fas '+section.icon+' m-r-20"></i>'+section.name+'</a>';
 
 		content += '<div class="row tab-pane fade '+ (section.state || '')+' show" id="nav-'+section.id+'" role="tabpanel" aria-labelledby="nav-'+section.id+'-tab">';
 		content += '    <h2 class="col-lg-12 title-1 m-t-15 m-b-15">'+section.name+'</h2>';
