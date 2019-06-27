@@ -30,8 +30,8 @@ var sections =
 		id : "doughutChart",
 		name : "Doughut Chart"
 	},{
-		id : "radarChart",
-		name : "Rader chart"
+		id : "polarAreaChart",
+		name : "Polar Area Chart"
 	}]
 }];
 

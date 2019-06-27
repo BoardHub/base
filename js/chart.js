@@ -37,17 +37,6 @@ var charts = {
 			data: [40, 55, 75, 81, 56, 55, 40]
 		}]
 	},
-	doughutChart : {
-		type : 'doughnut',
-		background : true,
-		xAxesLabel : '',
-		yAxesLabel : '',
-		labels : ["A", "B", "C", "D"],
-		datasets : [{
-			label : "My First dataset",
-			data: [45, 25, 20, 10]
-		}]
-	},
 	barChart : {	
 		type : 'bar',
 		background : true,
@@ -60,6 +49,28 @@ var charts = {
 		},{
 			label: "My Second dataset",
             data: [28, 48, 40, 19, 86, 27, 90],
+		}]
+	},
+	doughutChart : {
+		type : 'doughnut',
+		background : true,
+		xAxesLabel : '',
+		yAxesLabel : '',
+		labels : ["A", "B", "C", "D"],
+		datasets : [{
+			label : "My First dataset",
+			data: [45, 25, 20, 10]
+		}]
+	},
+	polarAreaChart : {
+		type : 'polarArea',
+		background : false,
+		xAxesLabel : '',
+		yAxesLabel : '',
+		labels : ["A", "B", "C", "D"],
+		datasets : [{
+			label : "My First dataset",
+			data: [45, 25, 20, 10]
 		}]
 	}
 }
@@ -87,8 +98,9 @@ function plotChart(id, chart) {
 		if (ctx) {
 		  
 		  ctx.height = 200;
-		  var datasets = [];
 		  
+		  // Datasets
+		  var datasets = [];
 		  var defaultDataset = {
 			borderWidth: 2,
 			pointStyle: 'circle',
@@ -96,21 +108,10 @@ function plotChart(id, chart) {
 			pointBorderColor: 'transparent'
 		  };
 		  
-		  var xAxesDisplay = true;
-		  var yAxesDisplay = true;
-		  var legendDisplay = false;
-		  if(chart.type === 'doughnut') {
-			  xAxesDisplay = false;
-			  yAxesDisplay = false;
-			  legendDisplay = true;
-		  } else {
-			  legendDisplay = datasets.length > 1
-		  }
-		  
 		  for(var i = 0; i < chart.datasets.length; i++) {
 			var dataset = chart.datasets[i];
 			Object.assign(dataset, defaultDataset);
-			if(chart.type === 'doughnut') {
+			if(chart.type === 'doughnut' || chart.type === 'polarArea') {
 				dataset.backgroundColor = [];
 				dataset.hoverBackgroundColor = [];
 				for(var j = 0; j < dataset.data.length; j++) {
@@ -131,38 +132,23 @@ function plotChart(id, chart) {
 			datasets.push(dataset);
 		  }
 		  
-		  var myChart = new Chart(ctx, {
-			type: chart.type,
-			data: {
-			  labels: chart.labels,
-			  type: chart.type,
-			  defaultFontFamily: 'Poppins',
-			  datasets: datasets
-			},
-			options: {
-			  responsive: true,
-			  tooltips: {
-				mode: 'index',
-				titleFontSize: 12,
-				titleFontColor: '#000',
-				bodyFontColor: '#000',
-				backgroundColor: '#fff',
-				titleFontFamily: 'Poppins',
-				bodyFontFamily: 'Poppins',
-				cornerRadius: 3,
-				intersect: false,
-			  },
+		  // Options
+		  var options = {
 			  legend: {
 				position: 'top',
-				display: legendDisplay,
+				display: false,
 				labels: {
 				  usePointStyle: true,
 				  fontFamily: 'Poppins',
 				},
 			  },
+			  responsive: true
+		  };
+
+		  var defaultOptions = {
 			  scales: {
 				xAxes: [{
-				  display: xAxesDisplay,
+				  display: true,
 				  gridLines: {
 					display: false,
 					drawBorder: false
@@ -177,7 +163,7 @@ function plotChart(id, chart) {
 				  }
 				}],
 				yAxes: [{
-				  display: yAxesDisplay,
+				  display: true,
 				  gridLines: {
 					display: false,
 					drawBorder: false
@@ -193,12 +179,42 @@ function plotChart(id, chart) {
 				  }
 				}]
 			  },
+			  tooltips: {
+				mode: 'index',
+				titleFontSize: 12,
+				titleFontColor: '#000',
+				bodyFontColor: '#000',
+				backgroundColor: '#fff',
+				titleFontFamily: 'Poppins',
+				bodyFontFamily: 'Poppins',
+				cornerRadius: 3,
+				intersect: false,
+			  },
+			  legend: {
+				display: datasets.length > 1
+			  },
 			  title: {
 				display: false,
 				text: 'Normal Legend'
 			  }
-			}
+		  };
+
+		  if(chart.type != 'doughnut' && chart.type != 'polarArea') {
+			  Object.assign(options, defaultOptions);
+		  }
+
+		  // Chart
+		  var myChart = new Chart(ctx, {
+			type: chart.type,
+			data: {
+			  labels: chart.labels,
+			  type: chart.type,
+			  defaultFontFamily: 'Poppins',
+			  datasets: datasets
+			},
+			options: options
 		  });
+
 		}
 	} catch (error) {
 		console.log(error);
@@ -208,7 +224,7 @@ function plotChart(id, chart) {
 function plotCharts() {
 	for(var id in charts) {
 		var chart = charts[id];
-		if(chart.type === 'line' || chart.type === 'bar' || chart.type === 'doughnut') {
+		if(chart.type === 'line' || chart.type === 'bar' || chart.type === 'doughnut' || chart.type === 'polarArea') {
 			plotChart(id, chart);
 		} else {
 			console.log('chart type not supported, id :' + chart.id + ', type : ' + chart.type );
