@@ -1,3 +1,7 @@
+
+var charts;
+
+/*
 var charts = {
 	lineChart : {
 		type : 'line',
@@ -74,6 +78,7 @@ var charts = {
 		}]
 	}
 }
+*/
 
 var COLORS = {
 	blue	:	{	hex : '#007bff',	rgb : 'rgba(0, 123, 255, 1)',	light : 'rgba(0, 123, 255, 0.5)'	},
@@ -94,7 +99,7 @@ var COLOR_VALUES = Object.values(COLORS);
 function plotChart(id, chart) {
 
 	try {		
-		var ctx = document.getElementById(id);
+		var ctx = document.getElementById(chart.id);
 		if (ctx) {
 		  
 		  ctx.height = 200;
@@ -108,8 +113,11 @@ function plotChart(id, chart) {
 			pointBorderColor: 'transparent'
 		  };
 		  
-		  for(var i = 0; i < chart.datasets.length; i++) {
-			var dataset = chart.datasets[i];
+		  for(var i = 0; i < chart.datasetscount; i++) {
+			var dataset = {
+				label : chart['dataset'+(i+1)+'label'],
+				data : chart['dataset'+(i+1)+'data'].split(','),
+			};
 			Object.assign(dataset, defaultDataset);
 			if(chart.type === 'doughnut' || chart.type === 'polarArea') {
 				dataset.backgroundColor = [];
@@ -155,7 +163,7 @@ function plotChart(id, chart) {
 				  },
 				  scaleLabel: {
 					display: true,
-					labelString: chart.xAxesLabel,
+					labelString: chart.xaxeslabel,
 					fontFamily: "Poppins"
 				  },
 				  ticks: {
@@ -170,7 +178,7 @@ function plotChart(id, chart) {
 				  },
 				  scaleLabel: {
 					display: true,
-					labelString: chart.yAxesLabel,
+					labelString: chart.yaxeslabel,
 					fontFamily: "Poppins"
 				  },
 				  ticks: {
@@ -207,7 +215,7 @@ function plotChart(id, chart) {
 		  var myChart = new Chart(ctx, {
 			type: chart.type,
 			data: {
-			  labels: chart.labels,
+			  labels: chart.labels.split(','),
 			  type: chart.type,
 			  defaultFontFamily: 'Poppins',
 			  datasets: datasets
@@ -231,5 +239,3 @@ function plotCharts() {
 		}
 	}
 }
-
-plotCharts();

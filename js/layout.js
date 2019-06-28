@@ -1,5 +1,8 @@
-var sections =
-[{
+
+var sections;
+
+/*
+var sections = [{
 	id : "cricket",
 	name : "Cricket",
 	state : 'active',
@@ -20,7 +23,7 @@ var sections =
 		name : "Single Bar Chart"
 	},{
 		id : "barChart",
-		name : "Bar chart"
+		name : "Bar Chart"
 	}]
 },{
 	id : "bollywood",
@@ -35,6 +38,8 @@ var sections =
 	}]
 }];
 
+*/
+
 function initLayout() {
 	
 	var nav = '';
@@ -47,19 +52,15 @@ function initLayout() {
 
 		content += '<div class="row tab-pane fade '+ (section.state || '')+' show" id="nav-'+section.id+'" role="tabpanel" aria-labelledby="nav-'+section.id+'-tab">';
 		content += '    <h2 class="col-lg-12 title-1 m-t-15 m-b-15">'+section.name+'</h2>';
-		if(section.charts) {
-			for(var j = 0; j < section.charts.length; j++) {
-				var chart = section.charts[j];
-				content += '    <div class="col-lg-6">';
-				content += '        <div class="au-card m-b-30">';
-				content += '            <div class="au-card-inner">';
-				content += '                <h3 class="title-2 m-b-40">'+chart.name+'</h3>';
-				content += '                <canvas id='+chart.id+'></canvas>';
-				content += '            </div>';
-				content += '        </div>';
-				content += '    </div>';
-				
-			}
+		for(var j = 0; j < section.chartcount; j++) {
+			content += '    <div class="col-lg-6">';
+			content += '        <div class="au-card m-b-30">';
+			content += '            <div class="au-card-inner">';
+			content += '                <h3 class="title-2 m-b-40">'+section['chart'+(j+1)+'name']+'</h3>';
+			content += '                <canvas id='+section['chart'+(j+1)+'id']+'></canvas>';
+			content += '            </div>';
+			content += '        </div>';
+			content += '    </div>';				
 		}
 		content += '</div>';
 	}
@@ -67,5 +68,3 @@ function initLayout() {
 	$('#nav-tab').append($(nav));
 	$('#nav-content').append($(content));
 };
-
-initLayout();
