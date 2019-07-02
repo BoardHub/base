@@ -52,15 +52,10 @@ function initLayout() {
 
 		content += '<div class="row tab-pane fade '+ (section.state || '')+' show" id="nav-'+section.id+'" role="tabpanel" aria-labelledby="nav-'+section.id+'-tab">';
 		content += '    <h2 class="col-lg-12 title-1 m-t-15 m-b-15">'+section.name+'</h2>';
+		
 		for(var j = 0; j < section.chartcount; j++) {
-			content += '    <div class="col-lg-6">';
-			content += '        <div class="au-card m-b-30">';
-			content += '            <div class="au-card-inner">';
-			content += '                <h3 class="title-2 m-b-40">'+section['chart'+(j+1)+'name']+'</h3>';
-			content += '                <canvas id='+section['chart'+(j+1)+'id']+'></canvas>';
-			content += '            </div>';
-			content += '        </div>';
-			content += '    </div>';				
+			var chartContent = getChartContent(section['chart'+(j+1)+'id'], section['chart'+(j+1)+'name'], 6);
+			content += chartContent;
 		}
 		content += '</div>';
 	}
@@ -68,3 +63,27 @@ function initLayout() {
 	$('#nav-tab').append($(nav));
 	$('#nav-content').append($(content));
 };
+
+
+function initChart(chartId, chartName) {
+	var content = '';
+	var chartContent = getChartContent(chartId, chartName, 12);
+	content += chartContent;
+	content += '</div>';
+	$('#nav-content').append($(content));
+}
+
+function getChartContent(chartId, chartName, size) {
+	var chartContent = '';
+
+	chartContent += '    <div class="col-lg-'+size+'"">';
+	chartContent += '        <div class="au-card m-b-30">';
+	chartContent += '            <div class="au-card-inner">';
+	chartContent += '                <h3 class="title-2 m-b-40">'+ chartName +'</h3>';
+	chartContent += '                <canvas id='+ chartId +'></canvas>';
+	chartContent += '            </div>';
+	chartContent += '        </div>';
+	chartContent += '    </div>';
+
+	return chartContent;
+}

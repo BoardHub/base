@@ -102,7 +102,12 @@ function plotChart(id, chart) {
 		var ctx = document.getElementById(chart.id);
 		if (ctx) {
 		  
-		  ctx.height = 200;
+		  if(ch) {
+			ctx.height = 100;
+		  } else {
+		  	ctx.height = 200;
+		  }
+		  
 		  
 		  // Datasets
 		  var datasets = [];
