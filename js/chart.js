@@ -102,12 +102,11 @@ function plotChart(id, chart) {
 		var ctx = document.getElementById(chart.id);
 		if (ctx) {
 		  
-		  if(ch) {
-			ctx.height = 100;
-		  } else {
-		  	ctx.height = 200;
-		  }
+		  ctx.height = 200;
 		  
+		  if(ch && $(window).width() > 991) {
+			ctx.height = 100;
+		  }
 		  
 		  // Datasets
 		  var datasets = [];
@@ -128,12 +127,12 @@ function plotChart(id, chart) {
 				dataset.backgroundColor = [];
 				dataset.hoverBackgroundColor = [];
 				for(var j = 0; j < dataset.data.length; j++) {
-					var backgroundColor = COLOR_VALUES[parseInt(Math.random()*10)];
+					var backgroundColor = COLOR_VALUES[j];
 					dataset.backgroundColor.push(backgroundColor.light);
 					dataset.hoverBackgroundColor.push(backgroundColor.rgb);
 				}
 			} else {
-				var color = COLOR_VALUES[parseInt(Math.random()*10)];
+				var color = COLOR_VALUES[i];
 				dataset.borderColor = color.rgb;
 				dataset.pointBackgroundColor = color.rgb;
 				if(chart.background) {
@@ -143,6 +142,10 @@ function plotChart(id, chart) {
 				}
 			}
 			datasets.push(dataset);
+		  }
+
+		  if(ch && $(window).width() < 991 && datasets[0].data.length >= 8) {
+		  	ctx.height = 300;
 		  }
 		  
 		  // Options
@@ -167,7 +170,7 @@ function plotChart(id, chart) {
 					drawBorder: false
 				  },
 				  scaleLabel: {
-					display: true,
+					display: chart.xaxeslabel != "",
 					labelString: chart.xaxeslabel,
 					fontFamily: "Poppins"
 				  },
@@ -182,7 +185,7 @@ function plotChart(id, chart) {
 					drawBorder: false
 				  },
 				  scaleLabel: {
-					display: true,
+					display: chart.yaxeslabel != "",
 					labelString: chart.yaxeslabel,
 					fontFamily: "Poppins"
 				  },

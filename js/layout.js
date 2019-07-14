@@ -45,13 +45,13 @@ function initLayout() {
 	var nav = '';
 	var content = '';
 	
-	for (var i = 0; i < sections.length; i++) {
-		var section = sections[i];
+	for (var id in sections) {
+		var section = sections[id];
 
 		nav +='<a class="js-arrow nav-item nav-link '+(section.state || '')+'" id="nav-'+section.id+'-tab" data-toggle="tab" href="#nav-'+section.id+'" role="tab" aria-controls="nav-'+section.id+'" aria-selected="false"><i class="fas '+section.icon+' m-r-20"></i>'+section.name+'</a>';
 
 		content += '<div class="row tab-pane fade '+ (section.state || '')+' show" id="nav-'+section.id+'" role="tabpanel" aria-labelledby="nav-'+section.id+'-tab">';
-		content += '    <h2 class="col-lg-12 title-1 m-t-15 m-b-15">'+section.name+'</h2>';
+		content += '    <h1 class="col-lg-12 title-1 m-t-15 m-b-15">'+section.name+'</h1>';
 		
 		for(var j = 0; j < section.chartcount; j++) {
 			var chartContent = getChartContent(section['chart'+(j+1)+'id'], section['chart'+(j+1)+'name'], 6);
@@ -59,6 +59,7 @@ function initLayout() {
 		}
 		content += '</div>';
 	}
+	
 	$('#nav-menu').append($(nav));
 	$('#nav-tab').append($(nav));
 	$('#nav-content').append($(content));
@@ -68,6 +69,7 @@ function initLayout() {
 function initChart(chartId, chartName) {
 	var content = '';
 	var chartContent = getChartContent(chartId, chartName, 12);
+	content += '<div class="row">';
 	content += chartContent;
 	content += '</div>';
 	$('#nav-content').append($(content));
@@ -76,10 +78,10 @@ function initChart(chartId, chartName) {
 function getChartContent(chartId, chartName, size) {
 	var chartContent = '';
 
-	chartContent += '    <div class="col-lg-'+size+'"">';
-	chartContent += '        <div class="au-card m-b-30">';
+	chartContent += '    <div class="col-lg-'+size+'">';
+	chartContent += '        <div class="au-card m-b-15">';
 	chartContent += '            <div class="au-card-inner">';
-	chartContent += '                <h3 class="title-2 m-b-40">'+ chartName +'</h3>';
+	chartContent += '                <h2 class="title-2 m-b-15">'+ chartName +'</h2>';
 	chartContent += '                <canvas id='+ chartId +'></canvas>';
 	chartContent += '            </div>';
 	chartContent += '        </div>';

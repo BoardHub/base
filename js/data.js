@@ -10,6 +10,7 @@ function getData(key, callback) {
 getData('1U8oVJ0iDZwPmmbE_wlBq4da7iJ0fyumewOwCW9cvxWY', function(result) {
 	//$('#results').html(JSON.stringify(result).replace(/,/g,",\n"));
 	sections = result.data;
+	sections = convertRowsToObj(sections);
 
 	getData('1aXy8j8vPMS0e--U9d8XtPyKdPcA-XG8ao9EHKywSMwQ', function(result) {
 		//$('#results').html(JSON.stringify(result).replace(/,/g,",\n"));
@@ -21,7 +22,8 @@ getData('1U8oVJ0iDZwPmmbE_wlBq4da7iJ0fyumewOwCW9cvxWY', function(result) {
 
 var urlParams = new URLSearchParams(window.location.search);
 var ch = urlParams.get('ch');
-if(ch) {
+var br = urlParams.get('br');
+if(ch || br) {
 	$('.menu-sidebar').remove();
 	$('.page-container').css('padding-left', '0px');
 }

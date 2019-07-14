@@ -212,6 +212,73 @@ strong {
     margin-bottom: 10px;
 }
 
+@media (max-width: 991px) {
+
+    .title-1 {
+        font-size: 22px;
+    }
+
+    .title-2 {
+        font-size: 18px;
+    }
+
+    .title-3 {
+        font-size: 18px;
+    }
+
+    .title-4 {
+        font-size: 22px;
+    }
+    
+    .title-5 {
+        font-size: 17px;
+    }
+
+    .title-6 {
+        font-size: 18px;
+    }
+
+    .heading-title {
+        font-size: 18px;
+        margin-bottom: 7px;
+    }
+
+}
+
+@media (max-width: 767px) {
+
+    .title-1 {
+        font-size: 15px;
+    }
+
+    .title-2 {
+        font-size: 12px;
+    }
+
+    .title-3 {
+        font-size: 12px;
+    }
+
+    .title-4 {
+        font-size: 15px;
+    }
+
+    .title-5 {
+        font-size: 11px;
+    }
+
+    .title-6 {
+        font-size: 12px;
+    }
+
+    .heading-title {
+        font-size: 18px;
+        margin-bottom: 5px;
+    }
+
+}
+
+
 /* ----- Links ----- */
 a {
     display: inline-block;
@@ -231,6 +298,7 @@ a {
     -moz-transition: all 0.3s ease;
     transition: all 0.3s ease;
 }
+
 
 /*-----------------------------------------------------*/
 /*                   OBJECTS                           */
@@ -261,6 +329,19 @@ section {
 @media (max-width: 991px) {
     .section__content--p30 {
         padding: 0;
+    }
+
+    .tab-content {
+        padding-left : 10px;
+        padding-right : 10px;
+    }
+}
+
+
+@media (max-width: 767px) {
+    .tab-content {
+        padding-left: 5px;
+        padding-right: 5px;
     }
 }
 
@@ -3251,12 +3332,29 @@ section {
     -moz-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.1);
     box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.1);
     padding: 40px;
-    padding-right: 35px;
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px;
     border-radius: 10px;
     background: #fff;
     overflow: hidden;
+}
+
+@media (max-width: 991px) {
+    .au-card {
+        padding: 30px;
+    }
+}
+
+@media (max-width: 767px) {
+    .au-card {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 575px) {
+    .au-card {
+        padding: 10px;
+    }
 }
 
 .au-card--border {
