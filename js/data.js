@@ -7,13 +7,41 @@ function getData(key, callback) {
 
 }
 
+
+function getUrlData(key, url, callback) {
+
+	$.get({
+		url : 'https://corsit.herokuapp.com/' + url,
+		//headers : { 'Origin' : '*' },
+		success : function( response ) {
+			window[callback](key, response);
+		}
+	});
+}
+
+function processNSEData(key, response) {
+
+	var chart = charts[key];
+	chart.labels =  response.data[0].symbol;
+	
+	var dataset = { label : chart.dataset1label, data : [response.data[0].netPrice] }; 
+	for(var i = 1; i < response.data.length; i++) {
+		var row = response.data[i];
+		chart.labels = chart.labels + ',' + row.symbol;
+		dataset.data.push(row.netPrice);
+	}
+	
+	plotChart(key, chart, [ dataset ]);
+
+}
+
+
+
 getData('1U8oVJ0iDZwPmmbE_wlBq4da7iJ0fyumewOwCW9cvxWY', function(result) {
-	//$('#results').html(JSON.stringify(result).replace(/,/g,",\n"));
 	sections = result.data;
 	sections = convertRowsToObj(sections);
 
 	getData('1aXy8j8vPMS0e--U9d8XtPyKdPcA-XG8ao9EHKywSMwQ', function(result) {
-		//$('#results').html(JSON.stringify(result).replace(/,/g,",\n"));
 		charts = result.data;
 		charts = convertRowsToObj(charts);
 		onDataLoaded();

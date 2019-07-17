@@ -96,7 +96,35 @@ var COLORS = {
 
 var COLOR_VALUES = Object.values(COLORS);
 
-function plotChart(id, chart) {
+function populateDatasetDefaults(chart, dataset, i) {
+	var defaultDataset = {
+		borderWidth: 2,
+		pointStyle: 'circle',
+		pointRadius: 3,
+		pointBorderColor: 'transparent'
+	};
+	Object.assign(dataset, defaultDataset);
+	if(chart.type === 'doughnut' || chart.type === 'polarArea') {
+		dataset.backgroundColor = [];
+		dataset.hoverBackgroundColor = [];
+		for(var j = 0; j < dataset.data.length; j++) {
+			var backgroundColor = COLOR_VALUES[j];
+			dataset.backgroundColor.push(backgroundColor.light);
+			dataset.hoverBackgroundColor.push(backgroundColor.rgb);
+		}
+	} else {
+		var color = COLOR_VALUES[i];
+		dataset.borderColor = color.rgb;
+		dataset.pointBackgroundColor = color.rgb;
+		if(chart.background) {
+			dataset.backgroundColor = color.light;
+		} else {
+			dataset.backgroundColor = 'transparent';
+		}
+	}
+}
+
+function plotChart(id, chart, datasets) {
 
 	try {		
 		var ctx = document.getElementById(chart.id);
@@ -109,39 +137,21 @@ function plotChart(id, chart) {
 		  }
 		  
 		  // Datasets
-		  var datasets = [];
-		  var defaultDataset = {
-			borderWidth: 2,
-			pointStyle: 'circle',
-			pointRadius: 3,
-			pointBorderColor: 'transparent'
-		  };
-		  
-		  for(var i = 0; i < chart.datasetscount; i++) {
-			var dataset = {
-				label : chart['dataset'+(i+1)+'label'],
-				data : chart['dataset'+(i+1)+'data'].split(','),
-			};
-			Object.assign(dataset, defaultDataset);
-			if(chart.type === 'doughnut' || chart.type === 'polarArea') {
-				dataset.backgroundColor = [];
-				dataset.hoverBackgroundColor = [];
-				for(var j = 0; j < dataset.data.length; j++) {
-					var backgroundColor = COLOR_VALUES[j];
-					dataset.backgroundColor.push(backgroundColor.light);
-					dataset.hoverBackgroundColor.push(backgroundColor.rgb);
-				}
-			} else {
-				var color = COLOR_VALUES[i];
-				dataset.borderColor = color.rgb;
-				dataset.pointBackgroundColor = color.rgb;
-				if(chart.background) {
-					dataset.backgroundColor = color.light;
-				} else {
-					dataset.backgroundColor = 'transparent';
-				}
-			}
-			datasets.push(dataset);
+		  if(datasets) {
+		  	for(var i = 0; i < datasets.length; i++) {
+				var dataset = datasets[i];
+				populateDatasetDefaults(chart, dataset, i);
+		  	}
+		  } else {
+			  datasets = [];	  
+			  for(var i = 0; i < chart.datasetscount; i++) {
+				var dataset = {
+					label : chart['dataset'+(i+1)+'label'],
+					data : chart['dataset'+(i+1)+'data'].split(','),
+				};
+				populateDatasetDefaults(chart, dataset, i);
+				datasets.push(dataset);
+		  	}
 		  }
 
 		  if(ch && $(window).width() < 991 && datasets[0].data.length >= 8) {
@@ -240,7 +250,12 @@ function plotChart(id, chart) {
 function plotCharts() {
 	for(var id in charts) {
 		var chart = charts[id];
-		if(chart.type === 'line' || chart.type === 'bar' || chart.type === 'doughnut' || chart.type === 'polarArea') {
+		
+		if(chart.dataset1datasource === 'URL') {
+			var url = chart.dataset1data;
+			var callback = chart.dataset1datacallback;
+			getUrlData(chart.id, url, callback);
+		} else if(chart.type === 'line' || chart.type === 'bar' || chart.type === 'doughnut' || chart.type === 'polarArea') {
 			plotChart(id, chart);
 		} else {
 			console.log('chart type not supported, id :' + chart.id + ', type : ' + chart.type );
