@@ -126,7 +126,15 @@ function populateDatasetDefaults(chart, dataset, i) {
 
 function plotChart(id, chart, datasets) {
 
-	try {		
+	try {
+
+		if(chart.dataset1datasource === 'URL' && !datasets) {
+			var url = chart.dataset1data;
+			var callback = chart.dataset1datacallback;
+			getUrlData(chart.id, url, callback);
+			return;
+		}
+
 		var ctx = document.getElementById(chart.id);
 		if (ctx) {
 		  
@@ -154,7 +162,7 @@ function plotChart(id, chart, datasets) {
 		  	}
 		  }
 
-		  if(ch && $(window).width() < 991 && datasets[0].data.length >= 8) {
+		  if($(window).width() < 991 && datasets[0].data.length >= 8) {
 		  	ctx.height = 300;
 		  }
 		  
@@ -251,11 +259,7 @@ function plotCharts() {
 	for(var id in charts) {
 		var chart = charts[id];
 		
-		if(chart.dataset1datasource === 'URL') {
-			var url = chart.dataset1data;
-			var callback = chart.dataset1datacallback;
-			getUrlData(chart.id, url, callback);
-		} else if(chart.type === 'line' || chart.type === 'bar' || chart.type === 'doughnut' || chart.type === 'polarArea') {
+		if(chart.type === 'line' || chart.type === 'bar' || chart.type === 'horizontalBar' || chart.type === 'doughnut' || chart.type === 'polarArea') {
 			plotChart(id, chart);
 		} else {
 			console.log('chart type not supported, id :' + chart.id + ', type : ' + chart.type );

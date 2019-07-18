@@ -11,22 +11,22 @@ function getData(key, callback) {
 function getUrlData(key, url, callback) {
 
 	$.get({
-		url : 'https://corsit.herokuapp.com/' + url,
-		//headers : { 'Origin' : '*' },
+		url : url,
+		// headers : { 'Origin' : '*' },
 		success : function( response ) {
 			window[callback](key, response);
 		}
 	});
 }
 
-function processNSEData(key, response) {
+function processNSEData(key, data) {
 
 	var chart = charts[key];
-	chart.labels =  response.data[0].symbol;
+	chart.labels =  data[0].symbol;
 	
-	var dataset = { label : chart.dataset1label, data : [response.data[0].netPrice] }; 
-	for(var i = 1; i < response.data.length; i++) {
-		var row = response.data[i];
+	var dataset = { label : chart.dataset1label, data : [data[0].netPrice] }; 
+	for(var i = 1; i < data.length; i++) {
+		var row = data[i];
 		chart.labels = chart.labels + ',' + row.symbol;
 		dataset.data.push(row.netPrice);
 	}
@@ -35,6 +35,21 @@ function processNSEData(key, response) {
 
 }
 
+function process91MobileData(key, data) {
+
+	var chart = charts[key];
+	chart.labels =  data[0].name;
+	
+	var dataset = { label : chart.dataset1label, data : [data[0].price] }; 
+	for(var i = 1; i < data.length; i++) {
+		var row = data[i];
+		chart.labels = chart.labels + ',' + row.name;
+		dataset.data.push(row.price);
+	}
+	
+	plotChart(key, chart, [ dataset ]);
+
+}
 
 
 getData('1U8oVJ0iDZwPmmbE_wlBq4da7iJ0fyumewOwCW9cvxWY', function(result) {
@@ -59,7 +74,7 @@ if(ch || br) {
 function onDataLoaded() {
 	if(ch) {
 		var chart = charts[ch];
-		document.title = chart.title;
+		document.title = chart.title || chart.name;
 		initChart(ch, chart.name);
 		plotChart(ch, chart);
 	} else {
