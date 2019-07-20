@@ -40,6 +40,14 @@ var sections = [{
 
 */
 
+var urlParams = new URLSearchParams(window.location.search);
+var ch = urlParams.get('ch');
+var br = urlParams.get('br');
+if(ch || br) {
+	$('.menu-sidebar').remove();
+	$('.page-container').css('padding-left', '0px');
+}
+
 function initLayout() {
 	
 	var nav = '';
@@ -51,7 +59,7 @@ function initLayout() {
 		nav +='<a class="js-arrow nav-item nav-link '+(section.state || '')+'" id="nav-'+section.id+'-tab" data-toggle="tab" href="#nav-'+section.id+'" role="tab" aria-controls="nav-'+section.id+'" aria-selected="false"><i class="fas '+section.icon+' m-r-20"></i>'+section.name+'</a>';
 
 		content += '<div class="row tab-pane fade '+ (section.state || '')+' show" id="nav-'+section.id+'" role="tabpanel" aria-labelledby="nav-'+section.id+'-tab">';
-		content += '    <h1 class="col-lg-12 title-1 m-t-15 m-b-15">'+section.name+'</h1>';
+		content += '    <h1 class="col-lg-12 title-1 m-t-15 m-b-15">' + (section.desc || section.name) + '</h1>';
 		
 		for(var j = 0; j < section.chartcount; j++) {
 			var chartContent = getChartContent(section['chart'+(j+1)+'id'], section['chart'+(j+1)+'name'], 6);

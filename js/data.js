@@ -51,6 +51,23 @@ function process91MobileData(key, data) {
 
 }
 
+function processPKLData(key, data) {
+
+	var chart = charts[key];
+	data = data[0].standings.groups[0].teams.team;
+	chart.labels =  data[0].team_name;
+	
+	var dataset = { label : chart.dataset1label, data : [data[0].points] }; 
+	for(var i = 1; i < data.length; i++) {
+		var row = data[i];
+		chart.labels = chart.labels + ',' + row.team_name;
+		dataset.data.push(row.points);
+	}
+	
+	plotChart(key, chart, [ dataset ]);
+
+}
+
 
 getData('1U8oVJ0iDZwPmmbE_wlBq4da7iJ0fyumewOwCW9cvxWY', function(result) {
 	sections = result.data;
@@ -63,19 +80,11 @@ getData('1U8oVJ0iDZwPmmbE_wlBq4da7iJ0fyumewOwCW9cvxWY', function(result) {
 	});
 });
 
-var urlParams = new URLSearchParams(window.location.search);
-var ch = urlParams.get('ch');
-var br = urlParams.get('br');
-if(ch || br) {
-	$('.menu-sidebar').remove();
-	$('.page-container').css('padding-left', '0px');
-}
-
 function onDataLoaded() {
 	if(ch) {
 		var chart = charts[ch];
-		document.title = chart.title || chart.name;
-		initChart(ch, chart.name);
+		document.title = chart.name;
+		initChart(ch, chart.desc || chart.name);
 		plotChart(ch, chart);
 	} else {
 		initLayout();
