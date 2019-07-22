@@ -45,7 +45,9 @@ var ch = urlParams.get('ch');
 var br = urlParams.get('br');
 if(ch || br) {
 	$('.menu-sidebar').remove();
+	$('.header-mobile').remove();
 	$('.page-container').css('padding-left', '0px');
+	$('.page-container').css('top', '0px');
 }
 
 function initLayout() {
