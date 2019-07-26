@@ -97,13 +97,27 @@ var COLORS = {
 var COLOR_VALUES = Object.values(COLORS);
 
 function populateDatasetDefaults(chart, dataset, i) {
+	
 	var defaultDataset = {
 		borderWidth: 2,
-		pointStyle: 'circle',
+		pointStyle1: 'circle',
 		pointRadius: 3,
-		pointBorderColor: 'transparent'
+		pointBorderColor1: 'transparent'
 	};
-	Object.assign(dataset, defaultDataset);
+	
+	dataset = Object.assign(dataset, defaultDataset);
+
+	var tileDefaultDataset = {
+		borderWidth: 1,
+		pointRadius: 1,
+		pointHitRadius: 10,
+		pointHoverRadius: 2
+	};
+
+	if(chart.tile) {
+		dataset = Object.assign(dataset, tileDefaultDataset);
+	}
+	
 	if(chart.type === 'doughnut' || chart.type === 'polarArea') {
 		dataset.backgroundColor = [];
 		dataset.hoverBackgroundColor = [];
@@ -135,122 +149,135 @@ function plotChart(id, chart, datasets) {
 			return;
 		}
 
-		var ctx = document.getElementById(chart.id);
+		var ctx = document.getElementById(id);
 		if (ctx) {
-		  
-		  ctx.height = 200;
-		  
-		  if(ch && $(window).width() > 991) {
-			ctx.height = 100;
-		  }
-		  
-		  // Datasets
-		  if(datasets) {
-		  	for(var i = 0; i < datasets.length; i++) {
-				var dataset = datasets[i];
-				populateDatasetDefaults(chart, dataset, i);
-		  	}
-		  } else {
-			  datasets = [];	  
-			  for(var i = 0; i < chart.datasetscount; i++) {
-				var dataset = {
-					label : chart['dataset'+(i+1)+'label'],
-					data : chart['dataset'+(i+1)+'data'].split(','),
-				};
-				populateDatasetDefaults(chart, dataset, i);
-				datasets.push(dataset);
-		  	}
-		  }
 
-		  if($(window).width() < 991 && datasets[0].data.length >= 8) {
-		  	ctx.height = 300;
-		  }
+			ctx.height = 200;
 		  
-		  // Options
-		  var options = {
-			  legend: {
-				position: 'top',
-				display: false,
-				labels: {
-				  usePointStyle: true,
-				  fontFamily: 'Poppins',
+			if((ch && $(window).width() > 991)) {
+				ctx.height = 100;
+			}
+
+			if(chart.tile) {
+				if($(window).width() > 991){
+					ctx.height = 100;
+				}
+				if($(window).width() <= 991 && $(window).width() > 767){
+					ctx.height = 75;
+				}
+				if($(window).width() <= 767) {
+					ctx.height = 50;
+				}
+			}
+
+			// Datasets
+			if(datasets) {
+				for(var i = 0; i < datasets.length; i++) {
+					var dataset = datasets[i];
+					populateDatasetDefaults(chart, dataset, i);
+				}
+			} else {
+				datasets = [];	  
+				for(var i = 0; i < chart.datasetscount; i++) {
+					var dataset = {
+						label : chart['dataset'+(i+1)+'label'],
+						data : chart['dataset'+(i+1)+'data'].split(','),
+					};
+					populateDatasetDefaults(chart, dataset, i);
+					datasets.push(dataset);
+				}
+			}
+
+			if($(window).width() < 991 && datasets[0].data.length >= 8) {
+				ctx.height = 300;
+			}
+		  
+			// Options
+			var defaultOptions = {
+				legend: {
+					position: 'top',
+					display: false,
+					labels: {
+						usePointStyle: true,
+						fontFamily: 'Poppins',
+					},
 				},
-			  },
-			  responsive: true
-		  };
+				responsive: true
+			};
 
-		  var defaultOptions = {
-			  scales: {
-				xAxes: [{
-				  display: true,
-				  gridLines: {
+			var options = {
+				scales: {
+					xAxes: [{
+						display: chart.xaxeslabel != "",
+						gridLines: {
+							display: false,
+							drawBorder: false
+						},
+						scaleLabel: {
+							display: chart.xaxeslabel != "",
+							labelString: chart.xaxeslabel,
+							fontFamily: "Poppins"
+						},
+						ticks: {
+							fontFamily: "Poppins"
+						}
+						}],
+					yAxes: [{
+						display: chart.yaxeslabel != "",
+						gridLines: {
+							display: false,
+							drawBorder: false
+						},
+						scaleLabel: {
+							display: chart.yaxeslabel != "",
+							labelString: chart.yaxeslabel,
+							fontFamily: "Poppins"
+						},
+						ticks: {
+							beginAtZero: true,
+							fontFamily: "Poppins"
+						}
+					}]
+				},
+				tooltips: {
+					mode: 'index',
+					titleFontSize: 12,
+					titleFontColor: '#000',
+					bodyFontColor: '#000',
+					backgroundColor: '#fff',
+					titleFontFamily: 'Poppins',
+					bodyFontFamily: 'Poppins',
+					cornerRadius: 3,
+					intersect: false,
+				},
+				legend: {
+					display: datasets.length > 1
+				},
+				title: {
 					display: false,
-					drawBorder: false
-				  },
-				  scaleLabel: {
-					display: chart.xaxeslabel != "",
-					labelString: chart.xaxeslabel,
-					fontFamily: "Poppins"
-				  },
-				  ticks: {
-					fontFamily: "Poppins"
-				  }
-				}],
-				yAxes: [{
-				  display: true,
-				  gridLines: {
-					display: false,
-					drawBorder: false
-				  },
-				  scaleLabel: {
-					display: chart.yaxeslabel != "",
-					labelString: chart.yaxeslabel,
-					fontFamily: "Poppins"
-				  },
-				  ticks: {
-					beginAtZero: true,
-					fontFamily: "Poppins"
-				  }
-				}]
-			  },
-			  tooltips: {
-				mode: 'index',
-				titleFontSize: 12,
-				titleFontColor: '#000',
-				bodyFontColor: '#000',
-				backgroundColor: '#fff',
-				titleFontFamily: 'Poppins',
-				bodyFontFamily: 'Poppins',
-				cornerRadius: 3,
-				intersect: false,
-			  },
-			  legend: {
-				display: datasets.length > 1
-			  },
-			  title: {
-				display: false,
-				text: 'Normal Legend'
-			  }
-		  };
+					text: 'Normal Legend'
+				}
+			};
 
-		  if(chart.type != 'doughnut' && chart.type != 'polarArea') {
-			  Object.assign(options, defaultOptions);
-		  }
+			if(chart.type != 'doughnut' && chart.type != 'polarArea') {
+				options = Object.assign(options, defaultOptions);
+			}
 
-		  // Chart
-		  var myChart = new Chart(ctx, {
-			type: chart.type,
-			data: {
-			  labels: chart.labels.split(','),
-			  type: chart.type,
-			  defaultFontFamily: 'Poppins',
-			  datasets: datasets
-			},
-			options: options
-		  });
+			// Chart
+			var myChart = new Chart(ctx, {
+				type: chart.type,
+				data: {
+					labels: chart.labels.split(','),
+					type: chart.type,
+					defaultFontFamily: 'Poppins',
+					datasets: datasets
+				},
+				options: options
+			});
 
-		}
+			}
 	} catch (error) {
+		console.log('Chart :' + id + ' ' + error);
 		console.log(error);
 	}
 }
@@ -258,7 +285,10 @@ function plotChart(id, chart, datasets) {
 function plotCharts() {
 	for(var id in charts) {
 		var chart = charts[id];
-		
+		if(chart.type === 'tile') {
+			chart.type = chart.dataset1type;
+			chart.tile = true;
+		}
 		if(chart.type === 'line' || chart.type === 'bar' || chart.type === 'horizontalBar' || chart.type === 'doughnut' || chart.type === 'polarArea') {
 			plotChart(id, chart);
 		} else {

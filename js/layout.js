@@ -43,7 +43,7 @@ var sections = [{
 var urlParams = new URLSearchParams(window.location.search);
 var ch = urlParams.get('ch');
 var br = urlParams.get('br');
-if(ch || br) {
+if(ch) {
 	$('.menu-sidebar').remove();
 	$('.header-mobile').remove();
 	$('.page-container').css('padding-left', '0px');
@@ -65,7 +65,9 @@ function initLayout() {
 		
 		for(var j = 0; j < section.chartcount; j++) {
 			var chartContent = getChartContent(section['chart'+(j+1)+'id'], section['chart'+(j+1)+'name'], 6);
-			content += chartContent;
+			if(chartContent){
+				content += chartContent;	
+			}
 		}
 		content += '</div>';
 	}
@@ -86,16 +88,40 @@ function initChart(chartId, chartName) {
 }
 
 function getChartContent(chartId, chartName, size) {
+	
 	var chartContent = '';
-
-	chartContent += '    <div class="col-lg-'+size+'">';
-	chartContent += '        <div class="au-card m-b-15">';
-	chartContent += '            <div class="au-card-inner">';
-	chartContent += '                <h2 class="title-2 m-b-15">'+ chartName +'</h2>';
-	chartContent += '                <canvas id='+ chartId +'></canvas>';
-	chartContent += '            </div>';
-	chartContent += '        </div>';
-	chartContent += '    </div>';
+	
+	if(charts[chartId].type === 'tile') {
+		var data = charts[chartId].dataset1data;
+		if($(window).width() > 575) {
+			chartContent += '	<div class="col-3">';
+		} else {
+			chartContent += '	<div class="col-6">';	
+		}
+		chartContent += '		<div class="overview-item">';
+		chartContent += '			<div class="overview__inner">';
+		chartContent += '				<div class="overview-box clearfix">';
+		chartContent += '					<div class="text">';
+		chartContent += '						<h2>'+data.substr(data.lastIndexOf(',')+1)+'</h2>';
+		chartContent += '						<span>'+chartName+'</span>';
+		chartContent += '					</div>';
+		chartContent += '				</div>';
+		chartContent += '				<div class="overview-chart">';
+		chartContent += '					<canvas id='+ chartId +'></canvas>';
+		chartContent += '				</div>';
+		chartContent += '			</div>';
+		chartContent += '		</div>';
+		chartContent += '	</div>';
+	} else {
+		chartContent += '    <div class="col-lg-'+size+'">';
+		chartContent += '        <div class="au-card m-t-15 m-b-15">';
+		chartContent += '            <div class="au-card-inner">';
+		chartContent += '                <h2 class="title-2 m-b-15">'+ chartName +'</h2>';
+		chartContent += '                <canvas id='+ chartId +'></canvas>';
+		chartContent += '            </div>';
+		chartContent += '        </div>';
+		chartContent += '    </div>';
+	}
 
 	return chartContent;
 }
