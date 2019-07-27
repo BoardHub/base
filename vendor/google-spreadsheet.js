@@ -10,7 +10,11 @@ GoogleUrl = (function() {
       try {
         this.key = this.url.match(/key=(.*?)&/)[1];
       } catch (error) {
-        this.key = this.url.match(/(cells|list)\/(.*?)\//)[2];
+        try {
+          this.key = this.url.match(/(cells|list)\/(.*?)\//)[2];
+        } catch (error) {
+          this.key = this.url.match(/d\/(.*?)\//)[1];
+        }
       }
     } else {
       this.key = this.sourceIdentifier;
