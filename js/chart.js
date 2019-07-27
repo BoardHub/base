@@ -81,17 +81,16 @@ var charts = {
 */
 
 var COLORS = {
-	blue	:	{	hex : '#007bff',	rgb : 'rgba(0, 123, 255, 1)',	light : 'rgba(0, 123, 255, 0.5)'	},
-	indigo	:	{	hex : '#6610f2',	rgb : 'rgba(102, 16, 242, 1)',	light : 'rgba(102, 16, 242, 0.5)'	},
-	purple	:	{	hex : '#6f42c1',	rgb : 'rgba(111, 66, 193, 1)',	light : 'rgba(111, 66, 193, 0.5)'	},
-	pink	:	{	hex : '#e83e8c',	rgb : 'rgba(232, 62, 140, 1)',	light : 'rgba(232, 62, 140, 0.5)'	},
-	red		:	{	hex : '#dc3545',	rgb : 'rgba(220, 53, 69, 1)',	light : 'rgba(220, 53, 69, 0.5)'	},
-	orange	:	{	hex : '#fd7e14',	rgb : 'rgba(253, 126, 20, 1)',	light : 'rgba(253, 126, 20, 0.5)'	},
-	yellow	:	{	hex : '#ffc107',	rgb : 'rgba(255, 193, 7, 1)',	light : 'rgba(255, 193, 7, 0.5)'	},
-	green	:	{	hex : '#28a745',	rgb : 'rgba(40, 167, 69, 1)',	light : 'rgba(40, 167, 69, 0.5)'	},
-	teal	:	{	hex : '#20c997',	rgb : 'rgba(32, 201, 151, 1)',	light : 'rgba(32, 201, 151, 0.5)'	},
-	cyan	:	{	hex : '#17a2b8',	rgb : 'rgba(23, 162, 184, 1)',	light : 'rgba(23, 162, 184, 0.5)'	},
-	gray	:	{	hex : '#6c757d',	rgb : 'rgba(108, 117, 125, 1)',	light : 'rgba(108, 117, 125, 0.5)'	}
+	blue	:	{	hex : '#007bff',	hex_light : '#007bff80',	rgb : 'rgba(0, 123, 255, 1)',		rgb_light : 'rgba(0, 123, 255, 0.5)'	},
+	purple	:	{	hex : '#6f42c1',	hex_light : '#6f42c180',	rgb : 'rgba(111, 66, 193, 1)',		rgb_light : 'rgba(111, 66, 193, 0.5)'	},
+	pink	:	{	hex : '#e83e8c',	hex_light : '#e83e8c80',	rgb : 'rgba(232, 62, 140, 1)',		rgb_light : 'rgba(232, 62, 140, 0.5)'	},
+	red		:	{	hex : '#dc3545',	hex_light : '#dc354580',	rgb : 'rgba(220, 53, 69, 1)',		rgb_light : 'rgba(220, 53, 69, 0.5)'	},
+	orange	:	{	hex : '#fd7e14',	hex_light : '#fd7e1480',	rgb : 'rgba(253, 126, 20, 1)',		rgb_light : 'rgba(253, 126, 20, 0.5)'	},
+	yellow	:	{	hex : '#ffc107',	hex_light : '#ffc10780',	rgb : 'rgba(255, 193, 7, 1)',		rgb_light : 'rgba(255, 193, 7, 0.5)'	},
+	green	:	{	hex : '#28a745',	hex_light : '#28a74580',	rgb : 'rgba(40, 167, 69, 1)',		rgb_light : 'rgba(40, 167, 69, 0.5)'	},
+	teal	:	{	hex : '#20c997',	hex_light : '#20c99780',	rgb : 'rgba(32, 201, 151, 1)',		rgb_light : 'rgba(32, 201, 151, 0.5)'	},
+	cyan	:	{	hex : '#17a2b8',	hex_light : '#17a2b880',	rgb : 'rgba(23, 162, 184, 1)',		rgb_light : 'rgba(23, 162, 184, 0.5)'	},
+	gray	:	{	hex : '#6c757d',	hex_light : '#6c757d80',	rgb : 'rgba(108, 117, 125, 1)',		rgb_light : 'rgba(108, 117, 125, 0.5)'	}
 };
 
 var COLOR_VALUES = Object.values(COLORS);
@@ -119,19 +118,27 @@ function populateDatasetDefaults(chart, dataset, i) {
 	}
 	
 	if(chart.type === 'doughnut' || chart.type === 'polarArea') {
+		dataset.borderColor = [];
 		dataset.backgroundColor = [];
 		dataset.hoverBackgroundColor = [];
 		for(var j = 0; j < dataset.data.length; j++) {
 			var backgroundColor = COLOR_VALUES[j];
-			dataset.backgroundColor.push(backgroundColor.light);
-			dataset.hoverBackgroundColor.push(backgroundColor.rgb);
+			if(chart.background) {
+				dataset.backgroundColor.push(backgroundColor.rgb_light);
+				dataset.hoverBackgroundColor.push(backgroundColor.rgb);
+			} else {
+				dataset.backgroundColor.push('transparent');
+				dataset.borderColor.push(COLOR_VALUES[0].rgb);
+				dataset.hoverBackgroundColor.push(COLOR_VALUES[0].rgb);
+			}
 		}
 	} else {
 		var color = COLOR_VALUES[i];
 		dataset.borderColor = color.rgb;
 		dataset.pointBackgroundColor = color.rgb;
+		dataset.hoverBackgroundColor = color.rgb;
 		if(chart.background) {
-			dataset.backgroundColor = color.light;
+			dataset.backgroundColor = color.rgb_light;
 		} else {
 			dataset.backgroundColor = 'transparent';
 		}
