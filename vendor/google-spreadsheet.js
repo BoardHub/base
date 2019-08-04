@@ -3,8 +3,9 @@ Updated versions can be found at https://github.com/mikeymckay/google-spreadshee
 */
 var GoogleSpreadsheet, GoogleUrl;
 GoogleUrl = (function() {
-  function GoogleUrl(sourceIdentifier) {
+  function GoogleUrl(sourceIdentifier, gid) {
     this.sourceIdentifier = sourceIdentifier;
+    this.gid = gid || 1;
     if (this.sourceIdentifier.match(/http(s)*:/)) {
       this.url = this.sourceIdentifier;
       try {
@@ -19,8 +20,8 @@ GoogleUrl = (function() {
     } else {
       this.key = this.sourceIdentifier;
     }
-    this.jsonCellsUrl = "https://spreadsheets.google.com/feeds/cells/" + this.key + "/1/public/basic?alt=json-in-script";
-    this.jsonListUrl = "https://spreadsheets.google.com/feeds/list/" + this.key + "/1/public/basic?alt=json-in-script";
+    this.jsonCellsUrl = "https://spreadsheets.google.com/feeds/cells/" + this.key + "/" + this.gid + "/public/basic?alt=json-in-script";
+    this.jsonListUrl = "https://spreadsheets.google.com/feeds/list/" + this.key + "/" + this.gid + "/public/basic?alt=json-in-script";
     this.jsonUrl = this.jsonListUrl;
   }
   return GoogleUrl;
@@ -53,8 +54,8 @@ GoogleSpreadsheet = (function() {
       return result;
     }
   };
-  GoogleSpreadsheet.prototype.url = function(url) {
-    return this.googleUrl(new GoogleUrl(url));
+  GoogleSpreadsheet.prototype.url = function(url, gid) {
+    return this.googleUrl(new GoogleUrl(url, gid));
   };
   GoogleSpreadsheet.prototype.googleUrl = function(googleUrl) {
     if (typeof googleUrl === "string") {
@@ -62,6 +63,7 @@ GoogleSpreadsheet = (function() {
     }
     this.url = googleUrl.url;
     this.key = googleUrl.key;
+    this.gid = googleUrl.gid;
     this.jsonUrl = googleUrl.jsonUrl;
     return this.googleUrl = googleUrl;
   };
@@ -111,7 +113,7 @@ GoogleSpreadsheet.find = function(params) {
 };
 GoogleSpreadsheet.callback = function(data) {
   var cell, googleSpreadsheet, googleUrl;
-  googleUrl = new GoogleUrl(data.feed.id.$t);
+  googleUrl = new GoogleUrl(data.feed.id.$t, data.feed.id.$t.match(/(.)\/public/)[1]);
   googleSpreadsheet = GoogleSpreadsheet.find({
     jsonUrl: googleUrl.jsonUrl
   });

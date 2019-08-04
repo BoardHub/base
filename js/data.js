@@ -4,11 +4,16 @@ function getData(key, callback) {
 	var googleSpreadsheet = new GoogleSpreadsheet();
 	googleSpreadsheet.url(key);
 	googleSpreadsheet.load(callback);
+}
 
+function getSheetData(key, sheetNo, callback) {
+	localStorage.clear();
+	var googleSpreadsheet = new GoogleSpreadsheet();
+	googleSpreadsheet.url(key, sheetNo);
+	googleSpreadsheet.load(callback);
 }
 
 function getUrlData(key, url, callback) {
-
 	$.get({
 		url : url,
 		// headers : { 'Origin' : '*' },

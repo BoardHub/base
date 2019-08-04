@@ -76,17 +76,21 @@ function initLayout() {
 		content += '</div>';
 	}
 	
+	$('#nav-menu').empty();
 	$('#nav-menu').append($(nav));
+
+	$('#nav-tab').empty();
 	$('#nav-tab').append($(nav));
+
+	$('#nav-content').empty();
 	$('#nav-content').append($(content));
 };
 
 
 function initChart(chartId, chartName) {
 	var content = '';
-	var chartContent = getChartContent(chartId, chartName, 12);
 	content += '<div class="row">';
-	content += chartContent;
+	content += getChartContent(chartId, chartName, 12);
 	content += '</div>';
 	$('#nav-content').append($(content));
 }

@@ -881,13 +881,7 @@ section {
 }
 
 .au-input--xl {
-    min-width: 935px;
-}
-
-@media (max-width: 1600px) {
-    .au-input--xl {
-        min-width: 350px;
-    }
+    min-width: 900px;
 }
 
 @media (max-width: 991px) {
