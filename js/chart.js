@@ -292,10 +292,6 @@ function plotChart(id, chart, datasets) {
 function plotCharts() {
 	for(var id in charts) {
 		var chart = charts[id];
-		if(chart.type === 'tile') {
-			chart.type = chart.dataset1type;
-			chart.tile = true;
-		}
 		if(chart.type === 'line' || chart.type === 'bar' || chart.type === 'horizontalBar' || chart.type === 'doughnut' || chart.type === 'polarArea') {
 			plotChart(id, chart);
 		} else {

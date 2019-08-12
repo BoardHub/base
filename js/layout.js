@@ -99,7 +99,7 @@ function getChartContent(chartId, chartName, size) {
 	
 	var chartContent = '';
 	
-	if(charts[chartId].type === 'tile') {
+	if(charts[chartId].tile) {
 		var data = charts[chartId].dataset1data;
 		if($(window).width() > 575) {
 			chartContent += '	<div class="col-3">';
