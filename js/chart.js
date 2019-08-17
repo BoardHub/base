@@ -290,12 +290,16 @@ function plotChart(id, chart, datasets) {
 }
 
 function plotCharts() {
-	for(var id in charts) {
-		var chart = charts[id];
-		if(chart.type === 'line' || chart.type === 'bar' || chart.type === 'horizontalBar' || chart.type === 'doughnut' || chart.type === 'polarArea') {
-			plotChart(id, chart);
-		} else {
-			console.log('chart type not supported, id :' + chart.id + ', type : ' + chart.type );
+	
+	for (var id in sections) {
+		var section = sections[id];
+		for(var j = 0; j < section.chartcount; j++) {
+			var chart = charts[section['chart'+(j+1)+'id']];
+			if(chart.type === 'line' || chart.type === 'bar' || chart.type === 'horizontalBar' || chart.type === 'doughnut' || chart.type === 'polarArea') {
+				plotChart(chart.id, chart);
+			} else {
+				console.log('chart type not supported, id :' + chart.id + ', type : ' + chart.type );
+			}
 		}
 	}
 }

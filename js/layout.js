@@ -50,6 +50,17 @@ if(ch) {
 	$('.page-container').css('top', '0px');
 }
 
+function onDataLoaded() {
+	if(ch && (chart = charts[ch])) {
+		document.title = chart.name;
+		initWidget(ch, chart, 12);
+		plotChart(ch, chart);
+	} else {
+		initLayout();
+		plotCharts();
+	}		
+}
+
 function initLayout() {
 	
 	var nav = '';
@@ -68,9 +79,18 @@ function initLayout() {
 		content += '    <h1 class="col-lg-12 title-1 m-t-15 m-b-15">' + (section.desc || section.name) + '</h1>';
 		
 		for(var j = 0; j < section.chartcount; j++) {
-			var chartContent = getChartContent(section['chart'+(j+1)+'id'], section['chart'+(j+1)+'name'], 6);
-			if(chartContent){
-				content += chartContent;	
+			var widgetId = section['chart'+(j+1)+'id'];
+			var widgetName = section['chart'+(j+1)+'name'];
+
+			var widgetLayout = '';
+			var widget = charts[widgetId];
+			if(widget.type === 'event') {
+				widgetLayout = getEventLayout(widgetId, widget, 12);
+			} else { // defaults to 'chart'
+				widgetLayout = getChartLayout(widgetId, widget, 6);
+			}
+			if(widgetLayout) {
+				content += widgetLayout;	
 			}
 		}
 		content += '</div>';
@@ -86,21 +106,24 @@ function initLayout() {
 	$('#nav-content').append($(content));
 };
 
-
-function initChart(chartId, chartName) {
+function initWidget(widgetId, widget) {
 	var content = '';
 	content += '<div class="row">';
-	content += getChartContent(chartId, chartName, 12);
+	if(widget.type == 'event') {
+		content += getEventLayout(widgetId, widget, 12);
+	} else { // defaults to 'chart'
+		content += getChartLayout(widgetId, widget, 12);
+	}
 	content += '</div>';
 	$('#nav-content').append($(content));
 }
 
-function getChartContent(chartId, chartName, size) {
+function getChartLayout(id, chart, size) {
 	
 	var chartContent = '';
-	
-	if(charts[chartId].tile) {
-		var data = charts[chartId].dataset1data;
+	var chartTitle = chart.name || chart.desc; 
+	if(chart.tile) {
+		var data = chart.dataset1data;
 		if($(window).width() > 575) {
 			chartContent += '	<div class="col-3">';
 		} else {
@@ -110,12 +133,12 @@ function getChartContent(chartId, chartName, size) {
 		chartContent += '			<div class="overview__inner">';
 		chartContent += '				<div class="overview-box clearfix">';
 		chartContent += '					<div class="text">';
-		chartContent += '						<h2>'+data.substr(data.lastIndexOf(',')+1)+'</h2>';
-		chartContent += '						<span>'+chartName+'</span>';
+		chartContent += '						<h2>' + data.substr( data.lastIndexOf(',') + 1 ) + '</h2>';
+		chartContent += '						<span>' + chartTitle + '</span>';
 		chartContent += '					</div>';
 		chartContent += '				</div>';
 		chartContent += '				<div class="overview-chart">';
-		chartContent += '					<canvas id='+ chartId +'></canvas>';
+		chartContent += '					<canvas id='+ id +'></canvas>';
 		chartContent += '				</div>';
 		chartContent += '			</div>';
 		chartContent += '		</div>';
@@ -124,12 +147,27 @@ function getChartContent(chartId, chartName, size) {
 		chartContent += '    <div class="col-lg-'+size+'">';
 		chartContent += '        <div class="au-card m-t-15 m-b-15">';
 		chartContent += '            <div class="au-card-inner">';
-		chartContent += '                <h2 class="title-2 m-b-15">'+ chartName +'</h2>';
-		chartContent += '                <canvas id='+ chartId +'></canvas>';
+		chartContent += '                <h2 class="title-2 m-b-15">'+ chartTitle +'</h2>';
+		chartContent += '                <canvas id='+ id +'></canvas>';
 		chartContent += '            </div>';
 		chartContent += '        </div>';
 		chartContent += '    </div>';
 	}
 
 	return chartContent;
+}
+
+
+function getEventLayout(id, event, size) {
+	var eventLayout = '';
+	eventLayout += '<div class="col-lg-'+size+'">';
+	eventLayout += '	<div class="card">';
+	eventLayout += '		<img class="card-img-top" src="' + event.cover + '">';
+	eventLayout += '		<div class="card-body">';
+	eventLayout += '			<h4 class="card-title mb-3">' + event.name + '</h4>';
+	eventLayout += '			<p class="card-text">' + event.desc + '</p>';
+	eventLayout += '		</div>';
+	eventLayout += '	</div>';
+	eventLayout += '</div>';
+	return eventLayout;	
 }

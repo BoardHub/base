@@ -23,19 +23,6 @@ function getUrlData(key, url, callback) {
 	});
 }
 
-function onDataLoaded() {
-	if(ch) {
-		var chart = charts[ch];
-		document.title = chart.name;
-		initChart(ch, chart.desc || chart.name);
-		plotChart(ch, chart);
-	} else {
-		initLayout();
-		plotCharts();
-	}
-		
-}
-
 function convertRowsToObj(rows) {
 	var obj = {};
 	for (var i = 0; i < rows.length; i++ ) {
