@@ -79,16 +79,15 @@ function initLayout() {
 		content += '    <h1 class="col-lg-12 title-1 m-t-15 m-b-15">' + (section.desc || section.name) + '</h1>';
 		
 		for(var j = 0; j < section.chartcount; j++) {
+			
 			var widgetId = section['chart'+(j+1)+'id'];
 			var widgetName = section['chart'+(j+1)+'name'];
-
-			var widgetLayout = '';
 			var widget = charts[widgetId];
-			if(widget.type === 'event') {
-				widgetLayout = getEventLayout(widgetId, widget, 12);
-			} else { // defaults to 'chart'
-				widgetLayout = getChartLayout(widgetId, widget, 6);
+			var size = 6;
+			if(widget.type == 'event' || widget.type == 'org') {
+				size = 12;
 			}
+			var widgetLayout = getWidgetLayout(widgetId, widget, size);
 			if(widgetLayout) {
 				content += widgetLayout;	
 			}
@@ -109,13 +108,21 @@ function initLayout() {
 function initWidget(widgetId, widget) {
 	var content = '';
 	content += '<div class="row">';
-	if(widget.type == 'event') {
-		content += getEventLayout(widgetId, widget, 12);
-	} else { // defaults to 'chart'
-		content += getChartLayout(widgetId, widget, 12);
-	}
+	content += getWidgetLayout(widgetId, widget, 12)
 	content += '</div>';
 	$('#nav-content').append($(content));
+}
+
+function getWidgetLayout(widgetId, widget, size) {
+	var widgetLayout = '';
+	if(widget.type == 'event') {
+		widgetLayout += getEventLayout(widgetId, widget, size);
+	} else if(widget.type == 'org') {
+		widgetLayout += getOrgLayout(widgetId, widget, size);
+	} else { // defaults to 'chart'
+		widgetLayout += getChartLayout(widgetId, widget, size);
+	}
+	return widgetLayout;
 }
 
 function getChartLayout(id, chart, size) {
@@ -170,4 +177,22 @@ function getEventLayout(id, event, size) {
 	eventLayout += '	</div>';
 	eventLayout += '</div>';
 	return eventLayout;	
+}
+
+function getOrgLayout(id, org, size) {
+	var orgLayout = '';
+	orgLayout += '<div class="col-lg-'+size+'">';
+	orgLayout += '	<div class="row">';
+	orgLayout += '		<div class="col-lg-3">';
+	orgLayout += '			<img class="" src="' + org.cover + '">';
+	orgLayout += '		</div>';
+	orgLayout += '		<div class="col-lg-9 card">';
+	orgLayout += '			<div class="card-body">';
+	orgLayout += '				<h4 class="card-title mb-3">' + org.name + '</h4>';
+	orgLayout += '				<p class="card-text">' + org.desc + '</p>';
+	orgLayout += '			</div>';
+	orgLayout += '		</div>';
+	orgLayout += '	</div>';
+	orgLayout += '</div>';
+	return orgLayout;	
 }

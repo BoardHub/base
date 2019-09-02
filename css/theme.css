@@ -1220,10 +1220,6 @@ section {
     border-radius: 2px;
 }
 
-.card {
-    margin-bottom: 30px;
-}
-
 .input-group-addon {
     background-color: transparent;
     border-left: 0;
