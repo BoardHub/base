@@ -10,7 +10,13 @@ function getSheetData(key, sheetNo, callback) {
 	localStorage.clear();
 	var googleSpreadsheet = new GoogleSpreadsheet();
 	googleSpreadsheet.url(key, sheetNo);
-	googleSpreadsheet.load(callback);
+	googleSpreadsheet.load(function(result){
+		if(!result) {
+			console.log('no result')
+			return;
+		}
+		callback(result)
+	});
 }
 
 function getUrlData(key, url, callback) {

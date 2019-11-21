@@ -1,5 +1,6 @@
-
 var charts;
+
+plotters['chart'] = 'plotChart';
 
 /*
 var charts = {

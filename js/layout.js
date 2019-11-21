@@ -1,5 +1,8 @@
 
 var sections;
+var widgets;
+var plotters = {};
+var layouts = {};
 
 /*
 var sections = [{
@@ -39,19 +42,34 @@ var sections = [{
 }];
 
 */
+var paths = window.location.pathname.split('/');
+var referer = paths[paths.length-1];
+var app = paths[paths.length-2];
 
 var urlParams = new URLSearchParams(window.location.search);
+var wd = urlParams.get('wd');
 var ch = urlParams.get('ch');
 var br = urlParams.get('br');
-if(ch) {
-	$('.menu-sidebar').remove();
-	$('.header-mobile').remove();
-	$('.page-container').css('padding-left', '0px');
-	$('.page-container').css('top', '0px');
+if(wd || ch || br) {
+	hideNav();
+}
+
+function hideNav() {
+    $('.menu-sidebar').remove();
+    $('.header-mobile').remove();
+    $('.page-container').css('padding-left', '0px');
+    $('.page-container').css('top', '0px');    
 }
 
 function onDataLoaded() {
-	if(ch && (chart = charts[ch])) {
+    //if(Object.keys(sections).length == 1) {
+    //    hideNav();
+    //}
+    
+    if(wd && (widget = widgets[wd])) {
+        document.title = widget.name;
+        plotWidget(wd, widget);
+    } else if(ch && (chart = charts[ch])) {
 		document.title = chart.name;
 		initWidget(ch, chart, 12);
 		plotChart(ch, chart);
@@ -83,8 +101,10 @@ function initLayout() {
 			var widgetId = section['chart'+(j+1)+'id'];
 			var widgetName = section['chart'+(j+1)+'name'];
 			var widget = charts[widgetId];
-			var size = 6;
-			if(widget.type == 'event' || widget.type == 'org') {
+            var size = 6;			
+			if(widget.size) {
+			    size = widget.size;
+			} else if(widget.type == 'event' || widget.type == 'preview') {
 				size = 12;
 			}
 			var widgetLayout = getWidgetLayout(widgetId, widget, size);
@@ -114,15 +134,14 @@ function initWidget(widgetId, widget) {
 }
 
 function getWidgetLayout(widgetId, widget, size) {
-	var widgetLayout = '';
-	if(widget.type == 'event') {
-		widgetLayout += getEventLayout(widgetId, widget, size);
-	} else if(widget.type == 'org') {
-		widgetLayout += getOrgLayout(widgetId, widget, size);
-	} else { // defaults to 'chart'
-		widgetLayout += getChartLayout(widgetId, widget, size);
+	var layout = layouts[widget.type];
+	if(layout) {
+	    return window[layout](widgetId, widget, size);
+	} else if(widget.type == 'event') { // ToDo : create event plotter
+		return getEventLayout(widgetId, widget, size);
+	} else { // defaults to 'chart' | ToDo : create chart plotter
+		return getChartLayout(widgetId, widget, size);
 	}
-	return widgetLayout;
 }
 
 function getChartLayout(id, chart, size) {
@@ -165,6 +184,7 @@ function getChartLayout(id, chart, size) {
 }
 
 
+// ToDo : Move to event board
 function getEventLayout(id, event, size) {
 	var eventLayout = '';
 	eventLayout += '<div class="col-lg-'+size+'">';
@@ -179,20 +199,13 @@ function getEventLayout(id, event, size) {
 	return eventLayout;	
 }
 
-function getOrgLayout(id, org, size) {
-	var orgLayout = '';
-	orgLayout += '<div class="col-lg-'+size+'">';
-	orgLayout += '	<div class="row">';
-	orgLayout += '		<div class="col-lg-3">';
-	orgLayout += '			<img class="" src="' + org.cover + '">';
-	orgLayout += '		</div>';
-	orgLayout += '		<div class="col-lg-9 card">';
-	orgLayout += '			<div class="card-body">';
-	orgLayout += '				<h4 class="card-title mb-3">' + org.name + '</h4>';
-	orgLayout += '				<p class="card-text">' + org.desc + '</p>';
-	orgLayout += '			</div>';
-	orgLayout += '		</div>';
-	orgLayout += '	</div>';
-	orgLayout += '</div>';
-	return orgLayout;	
+
+function plotWidget(widgetId, widget) {
+    var plotter = plotters[widget.type];
+    if(plotter) {
+        eval(plotter)(widget);
+    } else {
+        console.log('No plotter registered for type : ' + widget.type);
+    }
+    
 }

@@ -29,20 +29,20 @@ GoogleUrl = (function() {
 GoogleSpreadsheet = (function() {
   function GoogleSpreadsheet() {}
   GoogleSpreadsheet.prototype.load = function(callback) {
-    var intervalId, jsonUrl, safetyCounter, url, waitUntilLoaded;
-    
+    var intervalId, safetyCounter, waitUntilLoaded;
+    var url, googleUrl;
     //url = this.googleUrl.jsonCellsUrl + "&callback=GoogleSpreadsheet.callback";
     //$('body').append("<script src='" + url + "'/>");
     
     url = this.googleUrl.jsonListUrl + "&callback=GoogleSpreadsheet.callback";
     $('body').append("<script src='" + url + "'/>");
 
-    jsonUrl = this.jsonUrl;
+    googleUrl = this.googleUrl;
     safetyCounter = 0;
     waitUntilLoaded = function() {
       var result;
       result = GoogleSpreadsheet.find({
-        jsonUrl: jsonUrl
+        googleUrl: googleUrl
       });
       if (safetyCounter++ > 20 || ((result != null) && (result.data != null))) {
         clearInterval(intervalId);
@@ -68,7 +68,7 @@ GoogleSpreadsheet = (function() {
     return this.googleUrl = googleUrl;
   };
   GoogleSpreadsheet.prototype.save = function() {
-    return localStorage["GoogleSpreadsheet." + this.type] = JSON.stringify(this);
+    return localStorage["GoogleSpreadsheet." + this.googleUrl.key + "." + this.googleUrl.gid] = JSON.stringify(this);
   };
   return GoogleSpreadsheet;
 })();
@@ -81,18 +81,15 @@ GoogleSpreadsheet.bless = function(object) {
   }
   return result;
 };
-GoogleSpreadsheet.find = function(params) {
+GoogleSpreadsheet.find = function(googleUrl) {
   var item, itemObject, key, value, _i, _len;
   try {
     for (item in localStorage) {
       if (item.match(/^GoogleSpreadsheet\./)) {
         itemObject = JSON.parse(localStorage[item]);
-        for (key in params) {
-          value = params[key];
-          if (itemObject[key] === value) {
+          if (itemObject["GoogleSpreadsheet." + googleUrl.key + "." + googleUrl.key] === value) {
             return GoogleSpreadsheet.bless(itemObject);
           }
-        }
       }
     }
   } catch (error) {
@@ -100,12 +97,9 @@ GoogleSpreadsheet.find = function(params) {
       item = localStorage[_i];
       if (item.match(/^GoogleSpreadsheet\./)) {
         itemObject = JSON.parse(localStorage[item]);
-        for (key in params) {
-          value = params[key];
-          if (itemObject[key] === value) {
+          if (itemObject["GoogleSpreadsheet." + googleUrl.key + "." + googleUrl.key] === value) {
             return GoogleSpreadsheet.bless(itemObject);
           }
-        }
       }
     }
   }
@@ -115,7 +109,7 @@ GoogleSpreadsheet.callback = function(data) {
   var cell, googleSpreadsheet, googleUrl;
   googleUrl = new GoogleUrl(data.feed.id.$t, data.feed.id.$t.match(/(.)\/public/)[1]);
   googleSpreadsheet = GoogleSpreadsheet.find({
-    jsonUrl: googleUrl.jsonUrl
+    googleUrl: googleUrl
   });
   if (googleSpreadsheet === null) {
     googleSpreadsheet = new GoogleSpreadsheet();
