@@ -2,7 +2,7 @@ var filterSheetUrl = 'https://docs.google.com/spreadsheets/d/1nTDr5cIAFvJhUEBmqg
 var dataSheetUrl;
 
 var filters;
-var filtersOptions = {};
+var filtersOptions = [];
 
 getSheetData(filterSheetUrl, 2, function(result) {
     filters = result.data;
@@ -11,48 +11,48 @@ getSheetData(filterSheetUrl, 2, function(result) {
 
 function buildFilters(filters) {
 
-    var selector = '';
-    selector += '<form class="form-header row p-t-1" onsubmit="return false;">';
+    var form = '';
+    form += '<form class="form-header row p-t-10 m-l-5 m-r-5" onsubmit="return false;">';
+    form += '</form>';
+    form = $(form);
+    $('.main-content > .section__content').prepend(form);
+
     for (let index = 0; index < filters.length; index++) {
         const filter = filters[index];
-        selector += buildFilter(filter);
+        var select = $(buildFilter(filter));
+        if(filter.type == 'SECTION') {
+            select.hide();
+        }
+        form.append(select);
     }
-    selector += '</form>';
-    $('.main-content > .section__content').prepend($(selector));
 
-    buildFiltersOptions(filters);
+    buildParentFiltersOptions(filters);
 }
 
 
 function buildFilter(filter) {
+    var size = 'col-sm-6';
+    if(filter.type == 'SECTION') {
+        size = 'col-sm-12';
+    }
     var selector = '';
-    selector += '	<select id="' + filter.id + '" class="1form-control-lg form-control col-sm-12 col-lg-6" onchange="onFilterChange()">';
+    selector += '	<select id="' + filter.id + '" class="' + filter.type + '-filter 1form-control-lg form-control ' + size + '" onchange="onFilterChange()">';
+    selector += '       <option value="0" selected>Select ' + filter.name +'</option>';
     selector += '	</select>';
     return selector;
 }
 
-let index = 0;
-function buildFiltersOptions(filters) {
-    if(index < filters.length) {
-        getSheetData(filterSheetUrl, index + 3, function(result) {
-            buildFilterOptions(filters[index], result.data);
-            index++;
-            buildFiltersOptions(filters);
-        });
-    }
-}
-
-function buildFilterOptions(filter, filterOptions) {
-    filtersOptions[filter.id] = filterOptions;
-    var options = '<option value="0" selected>Select ' + filter.name +'</option>';
-    if(!filter.parent) {
-        for (let index = 0; index < filterOptions.length; index++) {
-            filterOption = filterOptions[index];
-            options += '<option value="' + filterOption.id +'">' + filterOption.name + '</option>';
+function buildParentFiltersOptions() {
+    getSheetData(filterSheetUrl, 3, function(result) {        
+        filtersOptions = result.data;
+        for (let index = 0; index < filtersOptions.length; index++) {
+            filtersOption = filtersOptions[index];
+            if(!filtersOption.parent) {
+                var option = '<option value="' + filtersOption.id +'">' + filtersOption.name + '</option>';
+                $('#'+filtersOption.filterid).append($(option));
+            }
         }
-    }
-
-    $('#'+filter.id).append($(options));
+    });
 }
 
 function onFilterChange() {
@@ -61,35 +61,49 @@ function onFilterChange() {
     var changedFilterOptionId = $('#'+ changedFilterId).val();
 
     for (let index = 0; index < filters.length; index++) {
-        
+
         const filter = filters[index];
+
         if(filter.parent == changedFilterId) {
-            
-            var options = '<option value="0" selected>Select ' + filter.name +'</option>';
-            
-            var filterOptions = filtersOptions[filter.id];
-            for (let index = 0; index < filterOptions.length; index++) {
 
-                filterOption = filterOptions[index];
-                if(filterOption.parent == changedFilterOptionId) {
-                    options += '<option value="' + filterOption.id +'">' + filterOption.name + '</option>';
+            if(filter.type == 'SECTION') {
+                $('.form-header .SECTION-filter').empty();
+                $('.form-header .SECTION-filter').hide();
+            } else {
+                var options = '<option value="0" selected>Select ' + filter.name +'</option>';
+                
+                for (let index = 0; index < filtersOptions.length; index++) {
+                    var filtersOption = filtersOptions[index];
+                    if(filtersOption.parent == changedFilterOptionId) {
+                        options += '<option value="' + filtersOption.id +'">' + filtersOption.name + '</option>';
+                    }
                 }
+    
+                $('#' + filter.id).empty();
+                $('#' + filter.id).append($(options));
             }
-
-            $('#'+filter.id).empty();
-            $('#'+filter.id).append($(options));
-        
-        } else if (filter.id == changedFilterId && filter.data == 'TRUE') {
             
-            var filterOptions = filtersOptions[filter.id];
-            for (let index = 0; index < filterOptions.length; index++) {
-                filterOption = filterOptions[index];
-                if(filterOption.id == changedFilterOptionId) {
-                    dataSheetUrl = filterOption.data;
-                    loadData();
+        } else if (filter.id == changedFilterId) {
+
+            if(filter.type == 'DATA') {
+                
+                for (let index = 0; index < filtersOptions.length; index++) {
+                    var filtersOption = filtersOptions[index];
+                    if(filtersOption.id == changedFilterOptionId) {
+                        dataSheetUrl = filtersOption.data;
+                        if(dataSheetUrl) {
+                            loadData();
+                        } else {
+                            clearData();
+                        }
+                    }
                 }
+
+            } else if (filter.type == 'SECTION') {
+                showSection();
             }
-        }
+            
+        } 
     }
 
 }
@@ -105,4 +119,17 @@ function loadData() {
             onDataLoaded();
         });
     });
+}
+
+function clearData() {
+    $('.form-header .SECTION-filter').empty();
+    $('.form-header .SECTION-filter').hide();
+    $('#nav-content').empty();
+}
+
+function showSection() {
+    var select = $(event.target);
+    sectionId = select.val();
+    $('#nav-content .active').removeClass('active');
+    $("#nav-"+sectionId).addClass("active");
 }

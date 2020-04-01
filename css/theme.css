@@ -1674,6 +1674,10 @@ section {
     z-index: 3;
 }
 
+.logo .icon {
+    height: 50px;
+}
+
 .menu-sidebar .navbar__list .navbar__sub-list {
     display: none;
     padding-left: 34px;

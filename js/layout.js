@@ -81,13 +81,17 @@ function initHeader() {
 
     if($(window).width() > 575) {
         headerDesktop.css('background', 'white');
-        $('.page-container').css('padding-top', ( headerDesktop.height() + 15 ) + 'px');
+        $('.page-container').css('padding-top', ( headerDesktop.height() + 10 ) + 'px');
+        $('.menu-sidebar .logo').css('margin-left', '-35px');
+        $('.menu-sidebar .logo .icon ').css('padding-right', '10px');
     } else {
         headerDesktop.remove();
         $('.page-container').css('padding-top', '1px');
+        $('.logo').css('margin-top', '-7px');
+        $('.logo').css('margin-left', '-15px');
     }
 
-    $('.page-container').css('padding-bottom', '65px');
+    $('.page-container').css('padding-bottom', '60px');
 
 }
 
@@ -130,44 +134,24 @@ function onDataLoaded() {
 
 function initLayout() {
 	
-	var content = '';
-    var pageFilter = '';
-
-    pageFilter += '	<select id="pageFilter" class="1form-control-lg form-control col-sm-12" onchange="showSection()">';
+    var content = '';
+    var sectionOptions = '';
 
 	for (var id in sections) {
+
         var section = sections[id];
         
-        pageFilter += '<option value="' + section.id +'">' + section.name + '</option>';
+        var sectionSelected = section.state == 'active' ? 'selected' : '';
+        sectionOptions += '<option value="' + section.id +'" ' + sectionSelected + '>' + section.name + '</option>';
 
 		content += '<div class="row tab-pane fade '+ (section.state || '')+' show" id="nav-'+section.id+'" role="tabpanel" aria-labelledby="nav-'+section.id+'-tab">';
-		content += '    <h1 class="col-lg-12 title-1 m-t-15">' + (section.desc || section.name) + '</h1>';
-
-		// for(var j = 0; j < section.chartcount; j++) {
-			
-		// 	var widgetId = section['chart'+(j+1)+'id'];
-		// 	var widgetName = section['chart'+(j+1)+'name'];
-		// 	var widget = charts[widgetId];
-        //     var size = 6;			
-		// 	if(widget.size) {
-		// 	    size = widget.size;
-		// 	} else if(widget.type == 'event' || widget.type == 'preview') {
-		// 		size = 12;
-		// 	}
-		// 	var widgetLayout = getWidgetLayout(widgetId, widget, size);
-		// 	if(widgetLayout) {
-		// 		content += widgetLayout;	
-		// 	}
-        // }
-        
+		content += '    <h1 class="col-lg-12 title-1 m-t-10 m-l-5 m-r-5">' + (section.desc || section.name) + '</h1>';        
 		content += '</div>';
     }
     
-    
-    pageFilter += '	</select>';
-	    
-    $('.form-header').remove('#pageFilter');
-    $('.form-header').append($(pageFilter));
+    $('.form-header .SECTION-filter').empty();
+    $('.form-header .SECTION-filter').append($(sectionOptions));
+    $('.form-header .SECTION-filter').show();
 
 	$('#nav-content').empty();
     $('#nav-content').append($(content));
@@ -180,10 +164,9 @@ function initLayout() {
         }
         var widgetLayout = getWidgetLayout(widgetId, widget, size);
         if(widgetLayout) {
-            $('#nav-' + widget.parent).append(widgetLayout);
+            $('#nav-' + widget.section).append(widgetLayout);
         }
     }
-
 
 };
 
@@ -206,64 +189,6 @@ function getWidgetLayout(widgetId, widget, size) {
 	}
 }
 
-
-// ToDo : Move to Dashboard
-// function getChartLayout(id, chart, size) {
-	
-// 	var chartContent = '';
-// 	var chartTitle = chart.name || chart.desc; 
-// 	if(chart.tile) {
-// 		var data = chart.dataset1data;
-// 		if($(window).width() > 575) {
-// 			chartContent += '	<div class="col-3">';
-// 		} else {
-// 			chartContent += '	<div class="col-6">';	
-// 		}
-// 		chartContent += '		<div class="overview-item">';
-// 		chartContent += '			<div class="overview__inner">';
-// 		chartContent += '				<div class="overview-box clearfix">';
-// 		chartContent += '					<div class="text">';
-// 		chartContent += '						<h2>' + data.substr( data.lastIndexOf(',') + 1 ) + '</h2>';
-// 		chartContent += '						<span>' + chartTitle + '</span>';
-// 		chartContent += '					</div>';
-// 		chartContent += '				</div>';
-// 		chartContent += '				<div class="overview-chart">';
-// 		chartContent += '					<canvas id='+ id +'></canvas>';
-// 		chartContent += '				</div>';
-// 		chartContent += '			</div>';
-// 		chartContent += '		</div>';
-// 		chartContent += '	</div>';
-// 	} else {
-// 		chartContent += '    <div class="col-lg-'+size+'">';
-// 		chartContent += '        <div class="au-card m-t-15 m-b-15">';
-// 		chartContent += '            <div class="au-card-inner">';
-// 		chartContent += '                <h2 class="title-2 m-b-15">'+ chartTitle +'</h2>';
-// 		chartContent += '                <canvas id='+ id +'></canvas>';
-// 		chartContent += '            </div>';
-// 		chartContent += '        </div>';
-// 		chartContent += '    </div>';
-// 	}
-
-// 	return chartContent;
-// }
-
-
-// ToDo : Move to event board
-// function getEventLayout(id, event, size) {
-// 	var eventLayout = '';
-// 	eventLayout += '<div class="col-lg-'+size+'">';
-// 	eventLayout += '	<div class="card">';
-// 	eventLayout += '		<img class="card-img-top" src="' + event.cover + '">';
-// 	eventLayout += '		<div class="card-body">';
-// 	eventLayout += '			<h4 class="card-title mb-3">' + event.name + '</h4>';
-// 	eventLayout += '			<p class="card-text">' + event.desc + '</p>';
-// 	eventLayout += '		</div>';
-// 	eventLayout += '	</div>';
-// 	eventLayout += '</div>';
-// 	return eventLayout;	
-// }
-
-
 function plotWidget(widgetId, widget) {
     var plotter = plotters[widget.type];
     if(plotter) {
@@ -279,8 +204,8 @@ layouts['video'] = 'getPreviewLayout';
 
 function getPreviewLayout(id, preview, size) {
 	var previewLayout = '';
-	previewLayout += '<div class="col-lg-'+size+' m-t-15">';
-	previewLayout += '	<div class="row">';
+	previewLayout += '<div class="col-lg-'+size+' m-t-10">';
+	previewLayout += '	<div class="row m-l-5 m-r-5">';
 	previewLayout += '		<div class="col-lg-3 card">';
 	previewLayout += '			<img class="" src="' + preview.cover + '">';
 	previewLayout += '		</div>';
@@ -297,13 +222,6 @@ function getPreviewLayout(id, preview, size) {
 	previewLayout += '	</div>';
 	previewLayout += '</div>';
 	return previewLayout;	
-}
-
-function showSection() {
-    var select = $(event.target);
-    sectionId = select.val();
-    $('#nav-content .active').removeClass('active');
-    $("#nav-"+sectionId).addClass("active");
 }
 
 $('#modalDialog').on('show.bs.modal', function (event) {
