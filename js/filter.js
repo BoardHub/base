@@ -1,13 +1,15 @@
-var filterSheetUrl = 'https://docs.google.com/spreadsheets/d/1nTDr5cIAFvJhUEBmqgMXia9R703viC08wUXUa6lOJ6w/edit';
+var filterSheetUrl; //= 'https://docs.google.com/spreadsheets/d/1nTDr5cIAFvJhUEBmqgMXia9R703viC08wUXUa6lOJ6w/edit';
 var dataSheetUrl;
 
 var filters;
 var filtersOptions = [];
 
-getSheetData(filterSheetUrl, 2, function(result) {
-    filters = result.data;
-    buildFilters(filters);
-});
+function loadFilters() {
+    getSheetData(filterSheetUrl, 2, function(result) {
+        filters = result.data;
+        buildFilters(filters);
+    });
+}
 
 function buildFilters(filters) {
 

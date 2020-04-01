@@ -45,9 +45,6 @@ var sections = [{
 }];
 
 */
-var paths = window.location.pathname.split('/');
-var referer = paths[paths.length-1];
-var app = paths[paths.length-2];
 
 var urlParams = new URLSearchParams(window.location.search);
 var wd = urlParams.get('wd');
