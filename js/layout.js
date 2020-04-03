@@ -1,4 +1,4 @@
-// var navSheetUrl = 'https://docs.google.com/spreadsheets/d/1nTDr5cIAFvJhUEBmqgMXia9R703viC08wUXUa6lOJ6w/edit';
+
 
 // var navs;
 var sections;
@@ -51,7 +51,7 @@ var wd = urlParams.get('wd');
 var ch = urlParams.get('ch');
 var br = urlParams.get('br');
 // if(wd || ch || br) {
-initNav();
+// initNav();
 // }
 
 initHeader();
@@ -67,7 +67,9 @@ function initNav() {
     //$('.menu-sidebar').remove();
     //$('.page-container').css('padding-left', '0px');
     // } else {
-    $('.hamburger').remove();
+    if(config.filter == 'Y' || wd) {
+        $('.hamburger').remove();
+    }
     // }
     
 }
@@ -113,42 +115,49 @@ function onDataLoaded() {
 
     if(wd && (widget = widgets[wd])) {
         document.title = widget.name;
-        initWidget(wd, widget, 12);
+        // Fix
+        //initWidget(wd, widget, 12);
         plotWidget(wd, widget);
-    } 
-    // ToDo : Use init/plot Widget
-    // else if(ch && (chart = charts[ch])) {
-	// 	document.title = chart.name;
-	// 	initWidget(ch, chart, 12);
-	// 	plotChart(ch, chart);
-    // } 
-    else {
+    } else {
         initLayout();
-        // ToDo : Convert to plotWidgets
-		//plotCharts();
 	}
 }
 
 function initLayout() {
-	
+    
+    var nav = '';
     var content = '';
     var sectionOptions = '';
 
 	for (var id in sections) {
 
         var section = sections[id];
-        
-        var sectionSelected = section.state == 'active' ? 'selected' : '';
-        sectionOptions += '<option value="' + section.id +'" ' + sectionSelected + '>' + section.name + '</option>';
+
+        if(config.filter == 'Y') {
+            var sectionSelected = section.state == 'active' ? 'selected' : '';
+            sectionOptions += '<option value="' + section.id +'" ' + sectionSelected + '>' + section.name + '</option>';
+        } else {
+            nav +='<a class="js-arrow nav-item nav-link '+(section.state || '')+'" id="nav-'+section.id+'-tab" data-toggle="tab" href="#nav-'+section.id+'" role="tab" aria-controls="nav-'+section.id+'" aria-selected="false"><i class="fas '+section.icon+' m-r-20"></i>'+section.name + '</a>';
+        }
 
 		content += '<div class="row tab-pane fade '+ (section.state || '')+' show" id="nav-'+section.id+'" role="tabpanel" aria-labelledby="nav-'+section.id+'-tab">';
 		content += '    <h1 class="col-lg-12 title-1 m-t-10 m-l-5 m-r-5">' + (section.desc || section.name) + '</h1>';        
 		content += '</div>';
     }
     
-    $('.form-header .SECTION-filter').empty();
-    $('.form-header .SECTION-filter').append($(sectionOptions));
-    $('.form-header .SECTION-filter').show();
+    if(config.filter) {
+        $('.form-header .SECTION-filter').empty();
+        $('.form-header .SECTION-filter').append($(sectionOptions));
+        $('.form-header .SECTION-filter').show();
+    }
+
+    if($(window).width() > 575) {
+        $('#nav-tab').empty();
+    	$('#nav-tab').append($(nav));
+    } else {
+        $('#nav-menu').empty();
+        $('#nav-menu').append($(nav));
+    }
 
 	$('#nav-content').empty();
     $('#nav-content').append($(content));
@@ -182,10 +191,6 @@ function getWidgetLayout(widgetId, widget, size) {
 	var layout = layouts[widget.type];
 	if(layout) {
 	    return window[layout](widgetId, widget, size);
-	} else if(widget.type == 'event') { // ToDo : create event plotter
-		return getEventLayout(widgetId, widget, size);
-	} else { // defaults to 'chart' | ToDo : create chart plotter
-		return getChartLayout(widgetId, widget, size);
 	}
 }
 
@@ -208,19 +213,27 @@ function getPreviewLayout(id, preview, size) {
 	previewLayout += '	<div class="row m-l-5 m-r-5">';
 	previewLayout += '		<div class="col-lg-4 card p-l-0 p-r-0">';
 	previewLayout += '			<img class="img-thumbnail" src="' + preview.cover + '">';
-	previewLayout += '		</div>';
+    previewLayout += '		</div>';
 	previewLayout += '		<div class="col-lg-8 card">';
-	previewLayout += '			<div class="card-body">';
-    previewLayout += '			<h4 class="card-title mb-3">' + preview.name;
+    previewLayout += '			<div class="card-body">';
+
+    previewDetail = '			<h4 class="card-title mb-3">' + preview.name;
 	if(preview.link) {
-        previewLayout += '			<button type="button" class="float-right fas fa-play" data-toggle="modal" data-target="#modalDialog" data-link="' + preview.link +'"></button>';
+        previewDetail += '			<button type="button" class="float-right fas fa-play" data-toggle="modal" data-target="#modalDialog" data-link="' + preview.link +'"></button>';
     }
-    previewLayout += '          </h4>';
-	previewLayout += '				<p class="card-text">' + preview.desc + '</p>';
+    previewDetail += '          </h4>';
+    previewDetail += '			<p class="card-text">' + preview.desc + '</p>';
+    
+    if(preview.detail) {
+        previewLayout += '      <a href="../index.html?wd=' + preview.detail + '">' + previewDetail + '</a>';
+    } else {
+        previewLayout += previewDetail;
+    }
 	previewLayout += '			</div>';
-	previewLayout += '		</div>';
-	previewLayout += '	</div>';
-	previewLayout += '</div>';
+    previewLayout += '		</div>';
+    previewLayout += '	</div>';
+    previewLayout += '</div>';
+
 	return previewLayout;	
 }
 

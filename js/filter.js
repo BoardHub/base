@@ -1,11 +1,12 @@
-var filterSheetUrl; //= 'https://docs.google.com/spreadsheets/d/1nTDr5cIAFvJhUEBmqgMXia9R703viC08wUXUa6lOJ6w/edit';
+var layoutSheetUrl;
 var dataSheetUrl;
 
 var filters;
 var filtersOptions = [];
 
-function loadFilters() {
-    getSheetData(filterSheetUrl, 2, function(result) {
+function loadFilters(layoutSheetUrl) {
+    this.layoutSheetUrl = layoutSheetUrl;
+    getSheetData(layoutSheetUrl, 2, function(result) {
         filters = result.data;
         buildFilters(filters);
     });
@@ -45,7 +46,7 @@ function buildFilter(filter) {
 }
 
 function buildParentFiltersOptions() {
-    getSheetData(filterSheetUrl, 3, function(result) {        
+    getSheetData(layoutSheetUrl, 3, function(result) {        
         filtersOptions = result.data;
         for (let index = 0; index < filtersOptions.length; index++) {
             filtersOption = filtersOptions[index];
@@ -92,9 +93,8 @@ function onFilterChange() {
                 for (let index = 0; index < filtersOptions.length; index++) {
                     var filtersOption = filtersOptions[index];
                     if(filtersOption.id == changedFilterOptionId) {
-                        dataSheetUrl = filtersOption.data;
-                        if(dataSheetUrl) {
-                            loadData();
+                        if(filtersOption.data) {
+                            loadData(filtersOption.data);
                         } else {
                             clearData();
                         }
@@ -110,7 +110,8 @@ function onFilterChange() {
 
 }
 
-function loadData() {
+function loadData(dataSheetUrl) {
+    this.dataSheetUrl = dataSheetUrl;
     getSheetData(dataSheetUrl, 1, function(result) {
         sections = result.data;
         sections = convertRowsToObj(sections);
