@@ -155,6 +155,9 @@ function initLayout() {
     
     for(var widgetId in widgets) {
         var widget = widgets[widgetId];
+        if(!widget.section) {
+            continue;
+        }
         var size = 6;	
         if(widget.size) {
             size = widget.size;
@@ -203,10 +206,10 @@ function getPreviewLayout(id, preview, size) {
 	var previewLayout = '';
 	previewLayout += '<div class="col-lg-'+size+' m-t-10">';
 	previewLayout += '	<div class="row m-l-5 m-r-5">';
-	previewLayout += '		<div class="col-lg-3 card">';
-	previewLayout += '			<img class="" src="' + preview.cover + '">';
+	previewLayout += '		<div class="col-lg-4 card p-l-0 p-r-0">';
+	previewLayout += '			<img class="img-thumbnail" src="' + preview.cover + '">';
 	previewLayout += '		</div>';
-	previewLayout += '		<div class="col-lg-9 card">';
+	previewLayout += '		<div class="col-lg-8 card">';
 	previewLayout += '			<div class="card-body">';
     previewLayout += '			<h4 class="card-title mb-3">' + preview.name;
 	if(preview.link) {

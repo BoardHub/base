@@ -33,9 +33,9 @@ function buildFilters(filters) {
 
 
 function buildFilter(filter) {
-    var size = 'col-sm-6';
+    var size = 'col-6';
     if(filter.type == 'SECTION') {
-        size = 'col-sm-12';
+        size = 'col-12';
     }
     var selector = '';
     selector += '	<select id="' + filter.id + '" class="' + filter.type + '-filter 1form-control-lg form-control ' + size + '" onchange="onFilterChange()">';

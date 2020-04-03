@@ -1218,6 +1218,7 @@ section {
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
     border-radius: 2px;
+    padding: .375rem 0.5rem;
 }
 
 .input-group-addon {
