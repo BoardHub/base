@@ -19,6 +19,8 @@ function loadApp() {
         }
         
         initNav();
+        initHeader();
+        initFooter();
 
         if(config.filter == 'Y') {
             loadFilters(config.layout);
