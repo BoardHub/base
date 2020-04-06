@@ -76,7 +76,9 @@ function initHeader() {
     var headerMobile = $('.header-mobile');
 
     if($(window).width() > 991) {
+
         var logo = $('.menu-sidebar .logo');
+
         logo.css('margin-left', '-35px');
         logo.css('border-right', '0px');
         logo.find('.icon').css('padding-right', '10px');
@@ -84,12 +86,13 @@ function initHeader() {
         if(config['headercolor']) {
             logo.css('color', config['headercolor']);
         }
-        
         if(config['headerbackground']) {
             logo.css('background', config['headerbackground']);
             headerDesktop.css('background', config['headerbackground']);
         }
+
     } else {
+
         headerDesktop.remove();
 
         var logo = $('.header-mobile .logo');
@@ -102,15 +105,47 @@ function initHeader() {
         if(config['headerbackground']) {
             headerMobile.css('background', config['headerbackground']);
         }
+
     }
 
 }
 
 function initFooter() {
+   
     var footer = $('.footer');
+
+    if(config['footercolor']) {
+        footer.css('color', config['footercolor']);
+    }
+
     if(config['footerbackground']) {
         footer.css('background', config['footerbackground']);
     }
+
+    var info = footer.find('#info');
+
+    if($(window).width() < 991) {
+        info.removeClass('p-t-10');
+        info.addClass('p-l-10');
+    }
+
+    if(config['phone']) {
+        info.append($('<div class="col-lg-6"><i class="fas fa-phone-volume"></i>' + config['phone'] + '</div>'));
+    }
+    if(config['email']) {
+        info.append($('<div class="col-lg-6"><i class="fas fa-envelope"></i> ' + config['email'] + '</div>'));
+    }
+    // if(config['address']) {
+    //     info.append($('<div class="col-lg-6"><i class="fas fa-address-card"></i> ' + config['address'] + '</div>'));
+    // }
+    // if(config['youtube']) {
+    //     info.append($('<div class="col-3"><i class="fas fa-youtube"></i> <a href=" ' + config['youtube'] + '"> YouTube </a></div>'));
+    // }
+    // if(config['facebook']) {
+    //     info.append($('<div class="col-3"><i class="fas fa-facebook"></i> <a href=" ' + config['facebook'] + '"> Facebook </a></div>'));
+    // }
+
+    
 }
 
 // function buildNav(navs) {
