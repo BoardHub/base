@@ -68,10 +68,7 @@ function initNav() {
             $('.menu-sidebar__content').remove();
             $('.page-container').css('padding-left', '0px');
         }
-        $('.page-container').css('padding-top',  '60px');
     }
-
-    $('.page-container').css('padding-bottom', '60px');
 
     if(config.nav == 'N' || wd) {
         $('.hamburger').remove();
@@ -83,15 +80,14 @@ function initHeader() {
 
     var headerDesktop = $('.header-desktop');
 
-    if($(window).width() > 575) {
-        headerDesktop.css('background', 'white');
+    if($(window).width() > 991) {
         $('.menu-sidebar .logo').css('margin-left', '-35px');
         $('.menu-sidebar .logo .icon ').css('padding-right', '10px');
         $('.menu-sidebar .logo').css('border-right', '0px');
     } else {
         headerDesktop.remove();
-        $('.logo').css('margin-top', '-7px');
-        $('.logo').css('margin-left', '-15px');
+        $('.header-mobile .logo').css('margin-top', '-7px');
+        $('.header-mobile .logo').css('margin-left', '-15px');
     }
 
 }
