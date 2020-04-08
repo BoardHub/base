@@ -74,11 +74,13 @@ function initHeader() {
 
     var headerDesktop = $('.header-desktop');
     var headerMobile = $('.header-mobile');
+    var logo;
 
     if($(window).width() > 991) {
 
-        var logo = $('.menu-sidebar .logo');
+        headerMobile.remove();
 
+        logo = $('.menu-sidebar .logo');
         logo.css('margin-left', '-35px');
         logo.css('border-right', '0px');
         logo.find('.icon').css('padding-right', '10px');
@@ -86,6 +88,7 @@ function initHeader() {
         if(config['headercolor']) {
             logo.css('color', config['headercolor']);
         }
+
         if(config['headerbackground']) {
             logo.css('background', config['headerbackground']);
             headerDesktop.css('background', config['headerbackground']);
@@ -95,17 +98,24 @@ function initHeader() {
 
         headerDesktop.remove();
 
-        var logo = $('.header-mobile .logo');
+        logo = $('.header-mobile .logo');
         logo.css('margin-top', '-7px');
         logo.css('margin-left', '-15px');
 
         if(config['headercolor']) {
             logo.css('color', config['headercolor']);
         }
+
         if(config['headerbackground']) {
             headerMobile.css('background', config['headerbackground']);
         }
 
+    }
+
+    if(config['logo']) {
+        document.title = config['name'];
+        logo.find('#logo-icon').attr('src', config['logo']);
+        logo.append(config['name']);
     }
 
 }
