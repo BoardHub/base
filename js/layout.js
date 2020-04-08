@@ -1,5 +1,3 @@
-
-
 // var navs;
 var sections;
 var widgets;
@@ -133,27 +131,31 @@ function initFooter() {
     }
 
     var info = footer.find('#info');
-
-    if($(window).width() < 991) {
-        info.removeClass('p-t-10');
-        info.addClass('p-l-10');
-    }
-
+ 
     if(config['phone']) {
-        info.append($('<div class="col-lg-6"><i class="fas fa-phone-volume"></i>' + config['phone'] + '</div>'));
+        info.append($('<div class="col-lg-3"><i class="fas fa-phone-volume"></i>' + config['phone'] + '</div>'));
     }
     if(config['email']) {
-        info.append($('<div class="col-lg-6"><i class="fas fa-envelope"></i> ' + config['email'] + '</div>'));
+        info.append($('<div class="col-lg-3"><i class="fas fa-envelope"></i> ' + config['email'] + '</div>'));
     }
-    // if(config['address']) {
-    //     info.append($('<div class="col-lg-6"><i class="fas fa-address-card"></i> ' + config['address'] + '</div>'));
-    // }
-    // if(config['youtube']) {
-    //     info.append($('<div class="col-3"><i class="fas fa-youtube"></i> <a href=" ' + config['youtube'] + '"> YouTube </a></div>'));
-    // }
-    // if(config['facebook']) {
-    //     info.append($('<div class="col-3"><i class="fas fa-facebook"></i> <a href=" ' + config['facebook'] + '"> Facebook </a></div>'));
-    // }
+
+    if($(window).width() > 991) {
+        
+        info.addClass('p-t-10');
+        
+        if(config['address']) {
+        info.append($('<div class="col-lg-6"><i class="fas fa-address-card"></i> ' + config['address'] + '</div>'));
+        }
+        if(config['youtube']) {
+            info.append($('<div class="col-3"><i class="fas fa-youtube"></i> <a href=" ' + config['youtube'] + '"> YouTube </a></div>'));
+        }
+        if(config['facebook']) {
+            info.append($('<div class="col-3"><i class="fas fa-facebook"></i> <a href=" ' + config['facebook'] + '"> Facebook </a></div>'));
+        }
+        
+    } else {
+        info.addClass('p-l-10');
+    }
 
     
 }
