@@ -112,6 +112,7 @@ function initHeader() {
 
     if(config['logo']) {
         document.title = config['name'];
+        $('#favicon').attr('href', config['logo']);
         logo.find('#logo-icon').attr('src', config['logo']);
         logo.append(config['name']);
     }
