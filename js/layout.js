@@ -58,8 +58,11 @@ function initNav() {
     if($(window).width() > 575) {
         if(config.nav == 'N' || wd) {            
             $('.menu-sidebar__content').remove();
+            $('.menu-sidebar').css('bottom', 'auto');
             $('.page-container').css('padding-left', '0px');
         }
+    } else {
+        $('.navbar-mobile').css('background', 'white');
     }
 
     if(config.nav == 'N' || wd) {
@@ -204,11 +207,15 @@ function initLayout() {
         }
 
 		content += '<div class="row tab-pane fade '+ (section.state || '')+' show" id="nav-'+section.id+'" role="tabpanel" aria-labelledby="nav-'+section.id+'-tab">';
-		content += '    <h1 class="col-lg-12 title-1 m-t-10 m-l-5 m-r-5">' + (section.desc || section.name) + '</h1>';        
+        content += '    <div class="nav-content-header col-lg-12">';
+        content += '        <h1 class="title-1 m-t-10 m-l-5 m-r-5">' + (section.desc || section.name) + '</h1>';
+        content += '    </div>';
+        content += '    <div class="row nav-content-body col-lg-12 p-r-0">';
+        content += '    </div>';
 		content += '</div>';
     }
     
-    if(config.filter) {
+    if(config.filter == 'Y') {
         $('.form-header .SECTION-filter').empty();
         $('.form-header .SECTION-filter').append($(sectionOptions));
         $('.form-header .SECTION-filter').show();
@@ -230,17 +237,38 @@ function initLayout() {
         if(!widget.section) {
             continue;
         }
-        var size = 6;	
-        if(widget.size) {
-            size = widget.size;
+        var size;
+        // if(widget.size) {
+        //     size = widget.size;
+        // }
+        if(config.nav == 'Y') {
+            size = 4;
+        } else {
+            size = 3;
         }
+
         var widgetLayout = getWidgetLayout(widgetId, widget, size);
         if(widgetLayout) {
-            $('#nav-' + widget.section).append(widgetLayout);
+            $('#nav-' + widget.section + ' .nav-content-body').append(widgetLayout);
         }
     }
 
+    resizeContent();
+        
 };
+
+function resizeContent() {
+    var maxHeight =  $(window).height() - $('.nav-content-header').height() - 100;
+    if(config.filter == 'Y') {
+        maxHeight -= $('.form-header').outerHeight();
+    }
+
+    $('.nav-content-body').css('max-height', maxHeight + 'px');
+}
+
+$(window).resize(function() {
+    resizeContent()
+});
 
 function initWidget(widgetId, widget) {
 	var content = '';
@@ -272,26 +300,30 @@ layouts['video'] = 'getPreviewLayout';
 
 function getPreviewLayout(id, preview, size) {
 	var previewLayout = '';
-	previewLayout += '<div class="col-lg-'+size+' m-t-10">';
+	previewLayout += '<div class="col-lg-'+size+' m-t-10 p-r-0">';
 	previewLayout += '	<div class="row m-l-5 m-r-5">';
-	previewLayout += '		<div class="col-lg-4 card p-l-0 p-r-0">';
+	previewLayout += '		<div class="col-4 col-lg-12 card p-l-0 p-r-0">';
 	previewLayout += '			<img class="img-thumbnail" src="' + preview.cover + '">';
     previewLayout += '		</div>';
-	previewLayout += '		<div class="col-lg-8 card">';
+	previewLayout += '		<div class="col-8 col-lg-12 card p-l-0 p-r-0">';
     previewLayout += '			<div class="card-body">';
 
-    previewDetail = '			<h4 class="card-title mb-3">' + preview.name;
+    previewDetail = '			<h5 class="mb-1">' + preview.name;
 	if(preview.link) {
         previewDetail += '			<button type="button" class="float-right fas fa-play" data-toggle="modal" data-target="#modalDialog" data-link="' + preview.link +'"></button>';
     }
-    previewDetail += '          </h4>';
-    previewDetail += '			<p class="card-text">' + preview.desc + '</p>';
+    previewDetail += '          </h5>';
     
+    if(preview.desc) {
+    previewDetail += '			<p class="card-text">' + preview.desc + '</p>';
+    }
+
     if(preview.detail) {
         previewLayout += '      <a href="../index.html?wd=' + preview.detail + '">' + previewDetail + '</a>';
     } else {
         previewLayout += previewDetail;
     }
+
 	previewLayout += '			</div>';
     previewLayout += '		</div>';
     previewLayout += '	</div>';

@@ -15,7 +15,7 @@ function loadFilters(layoutSheetUrl) {
 function buildFilters(filters) {
 
     var form = '';
-    form += '<form class="form-header row p-t-10 m-l-5 m-r-5" onsubmit="return false;">';
+    form += '<form class="form-header row p-t-10 m-l-5 m-r-5 m-b-0" onsubmit="return false;">';
     form += '</form>';
     form = $(form);
     $('.main-content > .section__content').prepend(form);
@@ -39,7 +39,7 @@ function buildFilter(filter) {
         size = 'col-12';
     }
     var selector = '';
-    selector += '	<select id="' + filter.id + '" class="' + filter.type + '-filter 1form-control-lg form-control ' + size + '" onchange="onFilterChange()">';
+    selector += '	<select id="' + filter.id + '" class="' + filter.type + '-filter 1form-control-lg 1form-control ' + size + '" onchange="onFilterChange()">';
     selector += '       <option value="0" selected>Select ' + filter.name +'</option>';
     selector += '	</select>';
     return selector;

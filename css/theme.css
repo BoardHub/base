@@ -89,6 +89,11 @@ p {
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
+    flex-direction: row;
+}
+
+.card-body {
+    padding: 1rem;
 }
 
 .btn {
@@ -399,7 +404,9 @@ section {
 .main-content {
     #padding-top: 116px;
     #min-height: 100vh;
-    max-height: calc(100vh - 100px);
+}
+
+.nav-content-body {
     overflow-y: auto;
     padding-bottom: 10px;
 }
@@ -1776,7 +1783,7 @@ section {
     padding: 0;
     line-height: 1;
     vertical-align: top;
-    background: #fff;
+    1background: #fff;
     display: -webkit-box;
     display: -webkit-flex;
     display: -moz-box;
