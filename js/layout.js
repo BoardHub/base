@@ -135,32 +135,35 @@ function initFooter() {
     }
 
     var info = footer.find('#info');
- 
-    if(config['phone']) {
-        info.append($('<div class="col-4 col-lg-2"><i class="fas fa-phone-volume"></i>' + config['phone'] + '</div>'));
-    }
-    if(config['email']) {
-        info.append($('<div class="col-8 col-lg-4"><i class="fas fa-envelope"></i> ' + config['email'] + '</div>'));
-    }
-    if(config['address']) {
-        info.append($('<div class="col-12 col-lg-6"><i class="fas fa-address-card"></i> ' + config['address'].split(',').join(', ') + '</div>'));
-    }
-
+    
     info.addClass('p-t-10');
-
-    if($(window).width() > 991) { 
-        if(config['youtube']) {
-            info.append($('<div class="col-3"><i class="fas fa-youtube"></i> <a href=" ' + config['youtube'] + '"> YouTube </a></div>'));
-        }
-        if(config['facebook']) {
-            info.append($('<div class="col-3"><i class="fas fa-facebook"></i> <a href=" ' + config['facebook'] + '"> Facebook </a></div>'));
-        }
-    } else {
+    if($(window).width() < 991) { 
         info.addClass('p-l-10');
         footer.css('font-size', 'x-small');
     }
 
-    
+    var footerConfigs = config['footer'];
+    if(footerConfigs) {
+        footerConfigs = footerConfigs.split(',');
+        for(var footerConfig of footerConfigs) {
+            if(config[footerConfig]) {
+                info.append($(getFooterInfo(footerConfig)));
+            }     
+        }
+    }
+}
+
+
+function getFooterInfo(type) {
+    switch (type) {
+        case 'phone'    :   return '<div class="col-4 col-lg-2"><i class="fas fa-phone-volume">' +  config['phone'] + '</i></div>';
+        //case 'phone'    :   return '<div class="col-4 col-lg-2"><i class="fas fa-phone-volume"><a style="color : inherit" href="tel:' +  config['phone'] + '">' +  config['phone'] + ' </a></i></div>';
+        case 'email'    :   return '<div class="col-8 col-lg-4"><i class="fas fa-envelope">' + config['email'] + ' </i></div>';
+        // case 'email'    :   return '<div class="col-8 col-lg-4"><i class="fas fa-envelope"><a style="color : inherit" href="mailto:' + config['email'] + '">' + config['email'] + ' </a></i></div>';
+        case 'address'  :   return '<div class="col-12 col-lg-6"><i class="fas fa-address-card"></i> ' + config['address'].split(',').join(', ') + '</div>';
+        case 'youtube'  :   return '<div class="col-4 col-lg-2"><i class="fas"><a style="color: inherit;text-decoration-line: underline;" target="_blank" href=" ' + config['youtube'] + '"> YouTube </a></i></div>';
+        case 'facebook' :   return '<div class="col-4 col-lg-2"><i class="fas"><a style="color: inherit;text-decoration-line: underline;" target="_blank" href=" ' + config['facebook'] + '"> Facebook </a></i></div>';
+    }
 }
 
 // function buildNav(navs) {

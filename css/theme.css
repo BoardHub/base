@@ -89,7 +89,7 @@ p {
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
-    flex-direction: row;
+    1flex-direction: row;
 }
 
 .card-body {
