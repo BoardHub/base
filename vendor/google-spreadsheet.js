@@ -3,26 +3,13 @@ Updated versions can be found at https://github.com/mikeymckay/google-spreadshee
 */
 var GoogleSpreadsheet, GoogleUrl;
 GoogleUrl = (function() {
-  function GoogleUrl(sourceIdentifier, gid) {
-    this.sourceIdentifier = sourceIdentifier;
-    this.gid = gid || 1;
-    if (this.sourceIdentifier.match(/http(s)*:/)) {
-      this.url = this.sourceIdentifier;
-      try {
-        this.key = this.url.match(/key=(.*?)&/)[1];
-      } catch (error) {
-        try {
-          this.key = this.url.match(/(cells|list)\/(.*?)\//)[2];
-        } catch (error) {
-          this.key = this.url.match(/d\/(.*?)\//)[1];
-        }
-      }
-    } else {
-      this.key = this.sourceIdentifier;
+  function GoogleUrl(sheetId, title) {
+    this.sheetId = sheetId;
+    this.title = title || 'Sheet1';
+    if (this.sheetId.match(/http(s)*:/)) {
+	  this.sheetId = this.sheetId.match(/d\/(.*?)\//)[1];
     }
-    this.jsonCellsUrl = "https://spreadsheets.google.com/feeds/cells/" + this.key + "/" + this.gid + "/public/basic?alt=json-in-script";
-    this.jsonListUrl = "https://spreadsheets.google.com/feeds/list/" + this.key + "/" + this.gid + "/public/basic?alt=json-in-script";
-    this.jsonUrl = this.jsonListUrl;
+    this.jsonUrl = "https://sheets.googleapis.com/v4/spreadsheets/"+this.sheetId+"/values/"+this.title+"?key=AIzaSyCQ4qF8BQb88PhXyYSjnngXdCFrLPPfVFY";
   }
   return GoogleUrl;
 })();
@@ -34,9 +21,9 @@ GoogleSpreadsheet = (function() {
     //url = this.googleUrl.jsonCellsUrl + "&callback=GoogleSpreadsheet.callback";
     //$('body').append("<script src='" + url + "'/>");
     
-    url = this.googleUrl.jsonListUrl + "&callback=GoogleSpreadsheet.callback";
+    url = this.googleUrl.jsonUrl + "&callback=GoogleSpreadsheet.callback";
     $('body').append("<script src='" + url + "'/>");
-
+    
     googleUrl = this.googleUrl;
     safetyCounter = 0;
     waitUntilLoaded = function() {
@@ -61,14 +48,13 @@ GoogleSpreadsheet = (function() {
     if (typeof googleUrl === "string") {
       throw "Invalid url, expecting object not string";
     }
-    this.url = googleUrl.url;
-    this.key = googleUrl.key;
-    this.gid = googleUrl.gid;
+    this.sheetId = googleUrl.sheetId;
+    this.title = googleUrl.title;
     this.jsonUrl = googleUrl.jsonUrl;
     return this.googleUrl = googleUrl;
   };
   GoogleSpreadsheet.prototype.save = function() {
-    return localStorage["GoogleSpreadsheet." + this.googleUrl.key + "." + this.googleUrl.gid] = JSON.stringify(this);
+    return localStorage["GoogleSpreadsheet." + this.googleUrl.title] = JSON.stringify(this);
   };
   return GoogleSpreadsheet;
 })();
@@ -87,7 +73,7 @@ GoogleSpreadsheet.find = function(googleUrl) {
     for (item in localStorage) {
       if (item.match(/^GoogleSpreadsheet\./)) {
         itemObject = JSON.parse(localStorage[item]);
-          if (itemObject["GoogleSpreadsheet." + googleUrl.key + "." + googleUrl.key] === value) {
+          if (item.title === googleUrl.title) {
             return GoogleSpreadsheet.bless(itemObject);
           }
       }
@@ -97,7 +83,7 @@ GoogleSpreadsheet.find = function(googleUrl) {
       item = localStorage[_i];
       if (item.match(/^GoogleSpreadsheet\./)) {
         itemObject = JSON.parse(localStorage[item]);
-          if (itemObject["GoogleSpreadsheet." + googleUrl.key + "." + googleUrl.key] === value) {
+          if (item.title === googleUrl.title) {
             return GoogleSpreadsheet.bless(itemObject);
           }
       }
@@ -106,6 +92,7 @@ GoogleSpreadsheet.find = function(googleUrl) {
   return null;
 };
 GoogleSpreadsheet.callback = function(data) {
+  /*
   var cell, googleSpreadsheet, googleUrl;
   googleUrl = new GoogleUrl(data.feed.id.$t, data.feed.id.$t.match(/(.)\/public/)[1]);
   googleSpreadsheet = GoogleSpreadsheet.find({
@@ -138,5 +125,21 @@ GoogleSpreadsheet.callback = function(data) {
     return _results;
   })();
   googleSpreadsheet.save();
+  */
+  
+  var googleSpreadsheet, googleUrl;
+  googleUrl = new GoogleUrl('', data.range.substr(0, data.range.indexOf('!')));
+  googleSpreadsheet = GoogleSpreadsheet.find({
+    googleUrl: googleUrl
+  });
+  if (googleSpreadsheet === null) {
+    googleSpreadsheet = new GoogleSpreadsheet();
+    googleSpreadsheet.googleUrl(googleUrl);
+  }
+
+  googleSpreadsheet.data = data.values;
+  
+  googleSpreadsheet.save();
+  
   return googleSpreadsheet;
 };

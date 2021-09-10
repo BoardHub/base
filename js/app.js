@@ -9,7 +9,7 @@ if(paths.length > 1) {
 
 function loadApp() {
 
-    getSheetData(tenantSheetUrl, 1, function(result) {
+    getSheetData(tenantSheetUrl, 'Tenant', function(result) {
         var configs = convertRowsToObj(result.data);
         if(tenant) {
             config = configs[tenant];
